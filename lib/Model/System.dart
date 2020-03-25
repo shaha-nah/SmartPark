@@ -41,13 +41,8 @@ class System{
   Future<List<dynamic>> showAvailableSlots(chosenDate, startTime, endTime) async{
     //get list of all available parking slots
     List<String> listAvailableSlots = await findAllParkingSlots(chosenDate, startTime, endTime);
-    //get list of all parking slots
-    var querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").getDocuments();
-    List<DocumentSnapshot> documentParkingSlots = querySnapshotParkingSlots.documents;
-    List<String> listAllParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){
-      return snapshot.documentID;
-    }).toList();
-    
+
+    var listAllParkingSlot = await ParkingLot().getListOfSlots();
     listAllParkingSlot.sort((a, b) => a.length.compareTo(b.length));
 
     List<String> listSlot = [];

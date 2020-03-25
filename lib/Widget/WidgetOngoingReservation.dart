@@ -328,7 +328,7 @@ class _WidgetOngoingReservation extends State<WidgetOngoingReservation> {
                       title: Text("Rs " + snapshot.data["reservationFee"].toString()),
                     ),
                   ),
-                  _btnCheckOut(),
+                  // _btnCheckOut(),
                   // _btnLotLocation(snapshot.data["parkingSlotID"]),
                 ],
               ),

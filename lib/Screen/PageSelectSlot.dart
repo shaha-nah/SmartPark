@@ -47,6 +47,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                     Icons.directions_car,
                     color: hex("#8860d0"),
                   ),
+                  SizedBox(width: 10,),
                   Text(_chosenVehicle),
                 ],
               ),
@@ -57,6 +58,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                     Icons.calendar_today,
                     color: hex("#8860d0"),
                   ),
+                  SizedBox(width: 10,),
                   Text(_date),
                 ],
               ),
@@ -67,6 +69,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                     Icons.access_time,
                     color: hex("#8860d0"),
                   ),
+                  SizedBox(width: 10,),
                   Text(_startTime + " - " + _endTime)
                 ],
               ),
@@ -75,10 +78,19 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
           actions: <Widget>[
             FlatButton(
               child: Text(
-                "OK",
+                "Cancel",
                 style: TextStyle(
-                  color: hex("#5680e9")
+                  color: Colors.red
                 ),
+              ),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
+            RaisedButton(
+              color: hex("#8860d0"),
+              child: Text(
+                "OK",
               ),
               onPressed: () async{
                 // String _parkingSlot = await _user.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
@@ -89,17 +101,6 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                   MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),
                   (Route<dynamic> route) => false,
                 );
-              },
-            ),
-            FlatButton(
-              child: Text(
-                "Dismiss",
-                style: TextStyle(
-                  color: hex("#34ceeb")
-                ),
-              ),
-              onPressed: (){
-                Navigator.of(context).pop();
               },
             ),
           ],
