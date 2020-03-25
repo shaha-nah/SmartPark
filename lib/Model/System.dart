@@ -83,17 +83,16 @@ class System{
     startTime = startTime.subtract(new Duration(hours: 1));
     endTime = endTime.add(new Duration(hours: 1));
 
-    var querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").getDocuments();
-    List<DocumentSnapshot> documentParkingSlots = querySnapshotParkingSlots.documents;
-    List<String> listParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){
-      return snapshot.documentID;
-    }).toList();
-
+    // var querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").getDocuments();
+    // List<DocumentSnapshot> documentParkingSlots = querySnapshotParkingSlots.documents;
+    // List<String> listParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){
+    //   return snapshot.documentID;
+    // }).toList();
+    var listParkingSlot = await ParkingLot().getListOfSlots();
     var listFreeSlots = await ParkingLot().getListOfSlots();
-    print(listFreeSlots);
 
     for (int i = 0; i<listParkingSlot.length; i++){
-      var reservations = await Firestore.instance.collection("reservation").where("parkingSlotID", isEqualTo: listParkingSlot[i]).where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 4).getDocuments();
+      var reservations = await Firestore.instance.collection("reservation").where("parkingSlotID", isEqualTo: listParkingSlot[i]).where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 5).getDocuments();
       List<DocumentSnapshot> reservation = reservations.documents;
 
       if (reservation.length != 0){
@@ -121,7 +120,7 @@ class System{
   Future setReservationCompleted() async{
     final String reservationID = await User().getCurrentReservation();
     return await Firestore.instance.collection("reservation").document(reservationID).updateData({
-      "reservationStatus": 3
+      "reservationStatus": 5
     });
   }
 
@@ -182,9 +181,13 @@ class System{
 
   Future reallocate(slot) async{
     String reservationID = await User().getCurrentReservation();
+    DocumentSnapshot reservation = await User().getReservationDetails();
+    int fee = await calculateFee("B", reservation["reservationStartTime"].toDate(), reservation["reservationEndTime"].toDate(), reservation["reservationEndTime"].toDate(), "normal");
+    String parkingLotID = await ParkingLot().getParkingLot(slot);
     await Firestore.instance.collection("reservation").document(reservationID).updateData({
-      "parkingLotID": "B",
+      "parkingLotID": parkingLotID,
       "parkingSlotID": slot,
+      "reservationFee": fee,
       "reservationSlotReallocation": ""
     });
   }

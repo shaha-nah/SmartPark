@@ -27,7 +27,7 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
     child: CircleAvatar(
       backgroundColor: Colors.transparent,
       radius: 75.0,
-      child: Image.asset('assets/hourglass.png'),
+      child: Image.asset('assets/sad.png'),
     ),
   );
 

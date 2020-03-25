@@ -205,7 +205,7 @@ class User {
     var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).getDocuments();
     List<DocumentSnapshot> reservation = reservations.documents;
     for (int i = 0; i< reservation.length; i++){
-      if (reservation[i].data["reservationStatus"] < 4){
+      if (reservation[i].data["reservationStatus"] < 5){
         return reservation[i].documentID;
       }
     }
@@ -220,7 +220,7 @@ class User {
 
   Future<List<dynamic>> getParkingHistory() async{
     String userID = await getCurrentUser();
-    var result = await Firestore.instance.collection('reservation').where("userID", isEqualTo: userID).where("reservationStatus", isGreaterThan: 3).getDocuments();
+    var result = await Firestore.instance.collection('reservation').where("userID", isEqualTo: userID).where("reservationStatus", isGreaterThan: 4).getDocuments();
     List<DocumentSnapshot> templist = result.documents;
     List<dynamic> list = templist.map((DocumentSnapshot snapshot){
       return snapshot.data;
@@ -231,7 +231,7 @@ class User {
   Future cancelReservation() async{
     String currentReservation = await getCurrentReservation();
     await Firestore.instance.collection("reservation").document(currentReservation).updateData({
-      "reservationStatus": 6
+      "reservationStatus": 7
     });
   }
 
@@ -239,12 +239,10 @@ class User {
     var currentReservationID = await getCurrentReservation();
     var currentReservation = await getReservationDetails();
     var fee;
-    DateTime checkOutTime = DateTime.now();
     
-    fee = await System().calculateFee(currentReservation["parkingLotID"], currentReservation["reservationStartTime"].toDate(), currentReservation["reservationEndTime"].toDate(), checkOutTime, "checkout");
+    fee = await System().calculateFee(currentReservation["parkingLotID"], currentReservation["reservationStartTime"].toDate(), currentReservation["reservationEndTime"].toDate(), currentReservation["reservationCheckOutTime"].toDate(), "checkout");
     
     await Firestore.instance.collection("reservation").document(currentReservationID).updateData({
-      "reservationCheckOutTime": checkOutTime,
       "reservationFee": fee
     });
   }

@@ -23,7 +23,7 @@ class Reservation{
     List<DocumentSnapshot> allReservations = allReservation.documents;
     if (allReservations.length != 0){
       //reservations exist
-      var userReservation = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 4).getDocuments();
+      var userReservation = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
       List<DocumentSnapshot> userReservations = userReservation.documents;
       for (int i = 0; i<userReservations.length; i++){
         if ((userReservations[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (userReservations[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
@@ -43,6 +43,9 @@ class Reservation{
             return "checkedin";
           }
         }
+        else if (userReservations[i].data["reservationStatus"] == 4){
+          return "checkingout";
+        }
       }
     }
       return null;
@@ -51,7 +54,7 @@ class Reservation{
   Future getExpiredReservation() async{
     print("boo");
     final String userID = await User().getCurrentUser();
-    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 4).getDocuments();
+    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
     List<DocumentSnapshot> reservation = reservations.documents;
     for (int i = 0; i < reservation.length; i++){
       if ((reservation[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (reservation[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
@@ -62,7 +65,7 @@ class Reservation{
 
   Future<String> getCurrentReservation() async{
     final String userID = await User().getCurrentUser();
-    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 4).getDocuments();
+    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
     List<DocumentSnapshot> reservation = reservations.documents;
     for (int i = 0; i< reservation.length; i++){
       print("boo");
@@ -79,7 +82,7 @@ class Reservation{
     final reservation = await getExpiredReservation();
     final String reservationID = reservation.documentID;
     return await Firestore.instance.collection("reservation").document(reservationID).updateData({
-      "reservationStatus": 5
+      "reservationStatus": 6
     });
   }
 }

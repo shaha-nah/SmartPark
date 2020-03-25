@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smartpark/Model/Reservation.dart';
+import 'package:smartpark/Screen/PageCheckOut.dart';
 import 'package:smartpark/Screen/PageReservationExpired.dart';
 import 'package:smartpark/Screen/PageSlotReallocation.dart';
 import 'package:smartpark/Widget/WidgetFindParkingSpot.dart';
@@ -37,6 +38,9 @@ class _PageHomeState extends State<PageHome>{
             else if (snapshot.data == "reallocation"){
               return PageSlotReallocation();
             }
+            else if (snapshot.data == "checkingout"){
+              return PageCheckOut();
+            } 
             else{
               return Container();
             }

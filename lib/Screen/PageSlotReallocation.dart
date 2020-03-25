@@ -17,8 +17,8 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
     tag: 'hero',
     child: CircleAvatar(
       backgroundColor: Colors.transparent,
-      radius: 60.0,
-      child: Image.asset('assets/cross.png'),
+      radius: 100.0,
+      child: Image.asset('assets/sad.png'),
     ),
   );
 
@@ -42,7 +42,7 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
         ),
         child: FlatButton(
           child: Text(
-            "OK",
+            "I understand!",
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -75,9 +75,9 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
                 children: <Widget>[
                   _image,
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 1),
                     child: Text(
-                      "OH NO! Your slot is not available...",
+                      "Oh no! Your slot is not available...",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold
@@ -85,6 +85,14 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  Text(
+                      "We are deeply for the inconvenience!",
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
@@ -100,19 +108,16 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
                     child: Text(
                       "Slot " + snapshot.data["reservationSlotReallocation"],
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Colors.red,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 3),
                     child: Text(
-                      "We apologize for the inconvenience!",
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
+                      "and given a discount.",
                       textAlign: TextAlign.center,
                     ),
                   ),
