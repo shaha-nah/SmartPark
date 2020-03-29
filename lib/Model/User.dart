@@ -39,6 +39,7 @@ class User {
       'userEmail': userEmail,
       'userPhoneNumber': userPhoneNumber,
       'userCredit': userCredit,
+      'userRole': "normal"
     });
   }
 
@@ -101,36 +102,6 @@ class User {
       print(e.toString());
       return null;
     }
-  }
-
-  Future changeName(String name) async {
-    final String cuid = await getCurrentUser();
-    // DocumentSnapshot snapshot = await Firestore.instance.collection("user").document(cuid).get();
-    return await Firestore.instance.collection("user").document(cuid).updateData({
-        'userName': name,
-    });
-  }
-
-  Future changePhoneNumber(String phoneNumber) async {
-    final String cuid = await getCurrentUser();
-    // DocumentSnapshot snapshot = await Firestore.instance.collection("user").document(cuid).get();
-    return await Firestore.instance.collection("user").document(cuid).updateData({
-        'userPhoneNumber': phoneNumber,
-    });
-  }
-
-  Future<void> changeEmail(String email) async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String userID = await getCurrentUser();
-    user.updateEmail(email).then((_) async{
-      print("Email changed");
-      return await Firestore.instance.collection("user").document(userID).updateData({
-        'userEmail': email
-      });
-    }).catchError((error) {
-      print("Email can't be changed: " + error.toString());
-    });
-    return null;
   }
 
   Future<bool> changePassword(String password) async {
@@ -322,6 +293,7 @@ class User {
       "parkingSlotID": parkingSlot,
       "reservationStatus": 1,
       "reservationFee": fee,
+      "reservationPenalty": false
     });
   }
 

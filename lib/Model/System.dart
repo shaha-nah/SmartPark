@@ -150,17 +150,26 @@ class System{
   // }
 
    Future<int> calculateFee(parkingLot, startTime, endTime, checkOutTime, type) async{
+    var reservation= await User().getReservationDetails();
     var parkingDocument = await Firestore.instance.collection("parkingLot").document(parkingLot).get();
     var normalFee = endTime.difference(startTime).inMinutes * (parkingDocument["parkingLotNormalRate"]/60);
     print(parkingDocument["parkingLotNormalRate"]/30);
     if (type == "checkout"){
       if (checkOutTime.isAfter(endTime)){
-        //late
-        return normalFee + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60);
+        if (reservation["reservationPenalty"] == true){
+          return normalFee.toInt() + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60) + parkingDocument["parkingLotPenaltyFee"];
+        }
+        else{
+          return normalFee.toInt() + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60);
+        }
       }
       else{
-        //normal
-        return normalFee.toInt();
+        if (reservation["reservationPenalty"] == true){
+          return normalFee.toInt() + parkingDocument["parkingLotPenaltyFee"];
+        }
+        else{
+          return normalFee.toInt();
+        }
       }
     }
     else if (type == "expired"){

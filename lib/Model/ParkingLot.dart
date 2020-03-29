@@ -22,6 +22,7 @@ class ParkingLot{
     List<String> listParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){
       return snapshot.documentID;
     }).toList();
+    listParkingSlot.sort((a, b) => a.length.compareTo(b.length));
     return listParkingSlot;
   }
 }
