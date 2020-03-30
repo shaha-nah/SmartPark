@@ -121,7 +121,7 @@ class _WidgetReservationState extends State<WidgetReservation> {
                    Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => PageHome()),
-                    (Route<dynamic> route) => true,
+                    (Route<dynamic> route) => false,
                   );
                 },
               ),
