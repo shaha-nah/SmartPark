@@ -1,3 +1,4 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,30 @@ class _WidgetReservationState extends State<WidgetReservation> {
   final User _user = User();
   final Vehicle _vehicle = Vehicle();
   final System _system = System();
+
+  void _dialogError(error){
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "OH NO!",
+      desc: error,
+      buttons: [
+        DialogButton(
+          color: Colors.red,
+          child: Text(
+            "Try Again",
+            style: TextStyle(
+              color: Colors.white, 
+              fontSize: 20
+            ),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
 
   int _reservationStatus;
   String _chosenVehicle;
@@ -272,8 +297,20 @@ class _WidgetReservationState extends State<WidgetReservation> {
                   itemBuilder: (context, index){
                     return GestureDetector(
                       onTap: () async{
-                        await _user.changeVehicle(snap.data[index]);
-                        Navigator.of(context).pop();
+                        var listener = DataConnectionChecker().onStatusChange.listen((status) async{
+                          switch (status) {
+                            case DataConnectionStatus.connected:
+                              await _user.changeVehicle(snap.data[index]);
+                              Navigator.of(context).pop();
+                              break;
+                            case DataConnectionStatus.disconnected:
+                              _dialogError("Please make sure you have an active internet connection");
+                              break;
+                          }
+                        });
+                        await Future.delayed(Duration(seconds: 5));
+                        await listener.cancel();
+                        
                       },
                       child: Container(
                         width: 100,
@@ -367,9 +404,20 @@ class _WidgetReservationState extends State<WidgetReservation> {
             ),
           ),
           onPressed: () async{
-            var fee = await _system.calculateFee(parkingLotID, startTime, endTime, endTime, "cancelled");
-            Navigator.of(context).pop();
-            return _dialogMakePayment(fee);
+            var listener = DataConnectionChecker().onStatusChange.listen((status) async{
+              switch (status) {
+                case DataConnectionStatus.connected:
+                  var fee = await _system.calculateFee(parkingLotID, startTime, endTime, endTime, "cancelled");
+                  Navigator.of(context).pop();
+                  return _dialogMakePayment(fee);
+                  break;
+                case DataConnectionStatus.disconnected:
+                  _dialogError("Please make sure you have an active internet connection");
+                  break;
+              }
+            });
+            await Future.delayed(Duration(seconds: 5));
+            await listener.cancel();
           },
           width: 120,
         )

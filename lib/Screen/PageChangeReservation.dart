@@ -1,8 +1,10 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/ParkingLot.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
@@ -28,26 +30,28 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
   DateTime _dtStartTime;
   DateTime _dtEndTime;
 
-  void _dialogError(String error){
-    showDialog(
+  void _dialogError(error){
+    Alert(
       context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          //title:
-          content: new Text(error),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("OK"),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
+      type: AlertType.error,
+      title: "OH NO!",
+      desc: error,
+      buttons: [
+        DialogButton(
+          color: Colors.red,
+          child: Text(
+            "Try Again",
+            style: TextStyle(
+              color: Colors.white, 
+              fontSize: 20
             ),
-          ],
-        );
-      }
-    );
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
   }
-
   void _dialogConfirmReservation(){
     showDialog(
       context: context,
@@ -339,22 +343,33 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
                 fontSize: 18),
           ),
           onPressed: () async {
-            if (_dtDate != null && _dtStartTime != null && _dtEndTime != null){
-              if (_dtStartTime.isAfter(DateTime.now()) && _dtEndTime.isAfter(DateTime.now())){
-                if(_dtEndTime.difference(_dtStartTime).inHours > 0.5){
-                  _dialogConfirmReservation();
-                }
-                else{
-                  _dialogError("Please make a reservation of at least half an hour");
-                }
+            var listener = DataConnectionChecker().onStatusChange.listen((status) async{
+              switch (status) {
+                case DataConnectionStatus.connected:
+                  if (_dtDate != null && _dtStartTime != null && _dtEndTime != null){
+                    if (_dtStartTime.isAfter(DateTime.now()) && _dtEndTime.isAfter(DateTime.now())){
+                      if(_dtEndTime.difference(_dtStartTime).inHours > 0.5){
+                        _dialogConfirmReservation();
+                      }
+                      else{
+                        _dialogError("Please make a reservation of at least half an hour");
+                      }
+                    }
+                    else{
+                      _dialogError("Please choose a time in the future");
+                    }
+                  }
+                  else{
+                    _dialogError("Please fill in all the required fields");
+                  }
+                  break;
+                case DataConnectionStatus.disconnected:
+                  _dialogError("Please make sure you have an active internet connection");
+                  break;
               }
-              else{
-                _dialogError("Please choose a time in the future");
-              }
-            }
-            else{
-              _dialogError("Please fill in all the required fields");
-            }
+            });
+            await Future.delayed(Duration(seconds: 5));
+            await listener.cancel();
           },
         ),
       )

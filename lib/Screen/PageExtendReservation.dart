@@ -1,3 +1,4 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -158,20 +159,32 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
                 fontSize: 18),
           ),
           onPressed: () async {
+            
             if (_dtEndTime != null){
-              if (_dtEndTime.isAfter(DateTime.now())){
-                if(_dtEndTime.difference(widget.originalStartTime).inMinutes > 29){
-                  _user.extendReservation(_dtEndTime);
-                  Navigator.of(context).pop();
+              var listener = DataConnectionChecker().onStatusChange.listen((status) async{
+                switch (status) {
+                  case DataConnectionStatus.connected:
+                    if (_dtEndTime.isAfter(DateTime.now())){
+                      if(_dtEndTime.difference(widget.originalStartTime).inMinutes > 29){
+                        _user.extendReservation(_dtEndTime);
+                        Navigator.of(context).pop();
 
+                      }
+                      else{
+                        _dialogError("A reservation of less than half an hour cannot be made");
+                      }
+                    }
+                    else{
+                      _dialogError("Please choose a time in the future");
+                    }
+                    break;
+                  case DataConnectionStatus.disconnected:
+                    _dialogError("Please make sure you have an active internet connection");
+                    break;
                 }
-                else{
-                  _dialogError("A reservation of less than half an hour cannot be made");
-                }
-              }
-              else{
-                _dialogError("Please choose a time in the future");
-              }
+              });
+              await Future.delayed(Duration(seconds: 5));
+              await listener.cancel();
             }
             else{
               Navigator.of(context).pop();

@@ -11,6 +11,7 @@ import 'package:smartpark/RouteTransition.dart';
 import 'package:smartpark/Screen/PageSelectSlot.dart';
 import 'package:smartpark/Screen/PageVehicleForm.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 class WidgetFindParkingSpot extends StatefulWidget {
   @override
@@ -23,7 +24,6 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
   final ParkingLot _parkingLot = ParkingLot();
   final System _system = System();
 
-  final _formKey = GlobalKey<FormState>();
   String _chosenVehicle = "";
 
   String _date = "Date";
@@ -450,23 +450,34 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                 fontSize: 18),
           ),
           onPressed: () async {
-            if (_dtDate != null && _dtStartTime != null && _dtEndTime != null && _chosenVehicle != ""){
-              if (_dtStartTime.isAfter(DateTime.now()) && _dtEndTime.isAfter(DateTime.now())){
-                if(_dtEndTime.difference(_dtStartTime).inMinutes > 29){
-                  _dialogConfirmReservation();
-                }
-                else{
-                  print(_dtEndTime.difference(_dtStartTime).inMinutes);
-                  _dialogError("Please make a reservation of at least half an hour");
-                }
+            var listener = DataConnectionChecker().onStatusChange.listen((status) {
+              switch (status) {
+                case DataConnectionStatus.connected:
+                  if (_dtDate != null && _dtStartTime != null && _dtEndTime != null && _chosenVehicle != ""){
+                    if (_dtStartTime.isAfter(DateTime.now()) && _dtEndTime.isAfter(DateTime.now())){
+                      if(_dtEndTime.difference(_dtStartTime).inMinutes > 29){
+                        _dialogConfirmReservation();
+                      }
+                      else{
+                        print(_dtEndTime.difference(_dtStartTime).inMinutes);
+                        _dialogError("Please make a reservation of at least half an hour");
+                      }
+                    }
+                    else{
+                      _dialogError("Please choose a time in the future");
+                    }
+                  }
+                  else{
+                    _dialogError("Please fill in all the required fields");
+                  }
+                  break;
+                case DataConnectionStatus.disconnected:
+                  _dialogError("Please make sure you have an active internet connection");
+                  break;
               }
-              else{
-                _dialogError("Please choose a time in the future");
-              }
-            }
-            else{
-              _dialogError("Please fill in all the required fields");
-            }
+            });
+            await Future.delayed(Duration(seconds: 5));
+            await listener.cancel();
           },
         ),
       )
