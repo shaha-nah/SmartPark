@@ -95,7 +95,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
               onPressed: () async{
                 // String _parkingSlot = await _user.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
                 String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
-                await _user.confirmReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
+                await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),

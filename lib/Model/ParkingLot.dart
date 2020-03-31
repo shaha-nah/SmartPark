@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smartpark/Model/User.dart';
 
 class ParkingLot{
   Future<String> getParkingLot(String parkingSlot) async{
@@ -17,9 +18,20 @@ class ParkingLot{
 
   Future<List<String>> getListOfSlots() async{
     List<String> reserveLots = await reservationParkingSlot();
-    QuerySnapshot querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").where("parkingLotID", isEqualTo: "A").getDocuments();
+    QuerySnapshot querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").where("parkingLotID", whereIn: reserveLots).getDocuments();
     List<DocumentSnapshot> documentParkingSlots = querySnapshotParkingSlots.documents;
     List<String> listParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){
+      return snapshot.documentID;
+    }).toList();
+    listParkingSlot.sort((a, b) => a.length.compareTo(b.length));
+    return listParkingSlot;
+  }
+
+  Future<List<String>> getReservedLot() async{
+    DocumentSnapshot reservation = await User().getReservationDetails();
+    QuerySnapshot qsParkingLot = await Firestore.instance.collection("parkingSlot").where("parkingLotID", isEqualTo: reservation["parkingLotID"]).getDocuments();
+    List<DocumentSnapshot> docParkingLot = qsParkingLot.documents;
+    List<String> listParkingSlot = docParkingLot.map((DocumentSnapshot snapshot){
       return snapshot.documentID;
     }).toList();
     listParkingSlot.sort((a, b) => a.length.compareTo(b.length));

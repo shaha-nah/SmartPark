@@ -59,6 +59,7 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
   }
 
   void _dialogConfirmReservation(){
+    bool _btnDisabled = false;
     showDialog(
       context: context,
       builder: (BuildContext context){
@@ -119,15 +120,15 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                 "OK",
               ),
               onPressed: () async{
-                String _parkingSlot = await _system.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
-                String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
-                await _user.confirmReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
-                Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
-                // Navigator.pushAndRemoveUntil(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),
-                //   (Route<dynamic> route) => false,
-                // );
+                if (!_btnDisabled){
+                  setState(() {
+                    _btnDisabled = !_btnDisabled;
+                  });
+                  String _parkingSlot = await _system.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
+                  String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
+                  await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
+                  Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
+                }
               },
             ),
           ],
@@ -491,10 +492,14 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
 
   @override
   Widget build(BuildContext context) {
+    final contentStyle = (BuildContext context) => ParentStyle()
+    ..overflow.scrollable()
+    ..padding(vertical: 30, horizontal: 20)
+    ..minHeight(MediaQuery.of(context).size.height - (2 * 30));
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Form(
-        key: _formKey,
+      body: Parent(
+        style: contentStyle(context),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Center(

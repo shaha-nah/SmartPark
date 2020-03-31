@@ -22,19 +22,6 @@ class _WidgetBottomNavigation extends State<WidgetBottomNavigation>{
 
   @override
   Widget build(BuildContext context) {
-
-    Color _iconColor(){
-      if (_currentIndex == 0){
-        return hex("#5680e9");
-      }
-      else if (_currentIndex == 1){
-        return hex("#5680e9");
-      }
-      else{
-        return hex("#5680e9");
-      }
-    }
-
     return Scaffold(
       // appBar: new AppBar(),
       body: _children[_currentIndex],
@@ -58,7 +45,7 @@ class _WidgetBottomNavigation extends State<WidgetBottomNavigation>{
             title: Text('Account')
           ),
         ],
-        fixedColor: _iconColor(),
+        fixedColor:hex("#5680e9"),
         onTap: (index){
           setState((){
             _currentIndex=index;

@@ -151,7 +151,7 @@ class User {
     }
   }
 
-  Future<void> confirmReservation(DateTime date, DateTime startTime, DateTime endTime, String parkingLot, String parkingSlot, String vehiclePlateNumber) async{
+  Future<void> makeReservation(DateTime date, DateTime startTime, DateTime endTime, String parkingLot, String parkingSlot, String vehiclePlateNumber) async{
     var userID = await getCurrentUser();
   
     var fee = await System().calculateFee(parkingLot, startTime, endTime, endTime, "normal");

@@ -120,7 +120,7 @@ class _WidgetReservationState extends State<WidgetReservation> {
                 onPressed: () async {
                    Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => PageHome()),
+                    MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),
                     (Route<dynamic> route) => false,
                   );
                 },
@@ -132,6 +132,7 @@ class _WidgetReservationState extends State<WidgetReservation> {
   }
 
   void _dialogMakePayment(fee){
+    bool _btnDisabled = false;
     showDialog(
       context: context,
       builder: (BuildContext context){
@@ -228,13 +229,18 @@ class _WidgetReservationState extends State<WidgetReservation> {
                     color: hex("#8860d0"),
                     child: new Text("OK"),
                     onPressed: () async {
-                      var result = await _user.makePayment(fee, "cancelled");
-                      Navigator.of(context).pop();
-                      if (result){
-                        _dialogPaymentSuccessful(fee);
-                      }
-                      else{
-                        _dialogPaymentFailed();
+                      if (!_btnDisabled){
+                        setState(() {
+                          _btnDisabled = !_btnDisabled;
+                        });
+                        var result = await _user.makePayment(fee, "cancelled");
+                        Navigator.of(context).pop();
+                        if (result){
+                          _dialogPaymentSuccessful(fee);
+                        }
+                        else{
+                          _dialogPaymentFailed();
+                        }
                       }
                     },
                   ),

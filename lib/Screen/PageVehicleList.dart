@@ -4,6 +4,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/Model/Vehicle.dart';
 import 'package:smartpark/Screen/PageVehicleForm.dart';
+import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 import 'package:smartpark/Widget/WidgetVehicleItem.dart';
 
 class PageVehicleList extends StatefulWidget {
@@ -79,23 +80,6 @@ class _PageVehicleListState extends State<PageVehicleList> {
                   print ("edit");
                 },
               );
-              // return Card(
-              //   margin: EdgeInsets.all(8.0),
-              //   child: ListTile(
-              //     leading: Icon(
-              //       Icons.directions_car,
-              //       color: hex("#5680e9"),
-              //     ),
-              //     title: Text(snap.data[index]["vehiclePlateNumber"]),
-              //     trailing: Icon(
-              //       Icons.delete_outline,
-              //       color: Colors.red,
-              //     ),
-              //     onTap: (){
-              //       //delete vehicle
-              //     },
-              //   ),
-              // );
             },
           );
         } 

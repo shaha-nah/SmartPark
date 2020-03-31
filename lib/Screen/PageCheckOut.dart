@@ -106,6 +106,7 @@ class _PageCheckOutState extends State<PageCheckOut> {
   }
 
   void _dialogMakePayment(){
+    bool _btnDisabled = false;
     showDialog(
       context: context,
       builder: (BuildContext context){
@@ -171,13 +172,18 @@ class _PageCheckOutState extends State<PageCheckOut> {
                     color: hex("#8860d0"),
                     child: new Text("OK"),
                     onPressed: () async {
-                      Navigator.of(context).pop();
-                      bool result = await _user.makePayment(snapshot.data["reservationFee"].toInt(), "normal");
-                      if (result){
-                        _dialogPaymentSuccessful(snapshot.data["reservationFee"]);
-                      }
-                      else{
-                        _dialogPaymentFailed();
+                      if (!_btnDisabled){
+                        setState(() {
+                          _btnDisabled = !_btnDisabled;
+                        });
+                        Navigator.of(context).pop();
+                        bool result = await _user.makePayment(snapshot.data["reservationFee"].toInt(), "normal");
+                        if (result){
+                          _dialogPaymentSuccessful(snapshot.data["reservationFee"]);
+                        }
+                        else{
+                          _dialogPaymentFailed();
+                        }
                       }
                     },
                   ),

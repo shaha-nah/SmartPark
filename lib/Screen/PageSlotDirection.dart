@@ -16,98 +16,11 @@ class PageSlotDirection extends StatefulWidget {
 }
 
 class _PageSlotDirectionState extends State<PageSlotDirection>{
-  final User _user = User();
   final ParkingLot _parkingLot = ParkingLot();
-  final System _system = System();
-  
-  final titles = ['Slot 1', "Slot 4", "Slot 8"];
-
-  final subtitles = ["Lot A", "Lot A", "Lot B"];
-  DateFormat dateFormat = DateFormat("MMM d, yyyy");
-  DateFormat timeFormat = DateFormat("HH: mm");
-
-  void _dialogConfirmReservation(_parkingSlot, _chosenVehicle, _dtDate, _dtStartTime, _dtEndTime){
-    showDialog(
-      context: context,
-      builder: (BuildContext context){
-        String _date = dateFormat.format(_dtDate);
-        String _startTime = timeFormat.format(_dtStartTime);
-        String _endTime = timeFormat.format(_dtEndTime);
-        return AlertDialog(
-          title: Text("Confirm Your Reservation"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.directions_car,
-                    color: hex("#8860d0"),
-                  ),
-                  Text(_chosenVehicle),
-                ],
-              ),
-              SizedBox(height: 10,),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.calendar_today,
-                    color: hex("#8860d0"),
-                  ),
-                  Text(_date),
-                ],
-              ),
-              SizedBox(height: 10,),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.access_time,
-                    color: hex("#8860d0"),
-                  ),
-                  Text(_startTime + " - " + _endTime)
-                ],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                "OK",
-                style: TextStyle(
-                  color: hex("#5680e9")
-                ),
-              ),
-              onPressed: () async{
-                // String _parkingSlot = await _user.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
-                String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
-                await _user.confirmReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),
-                  (Route<dynamic> route) => false,
-                );
-              },
-            ),
-            FlatButton(
-              child: Text(
-                "Dismiss",
-                style: TextStyle(
-                  color: hex("#34ceeb")
-                ),
-              ),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      }
-    );
-  }
 
   Widget parkingLot(){
     return FutureBuilder<dynamic>(
-          future: _parkingLot.getListOfSlots(),
+          future: _parkingLot.getReservedLot(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if (snapshot.connectionState == ConnectionState.done){
               return CustomScrollView(

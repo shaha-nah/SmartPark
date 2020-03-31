@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(User().user);
     return StreamProvider<User>.value(
       value:  User().user,
       child: MaterialApp(

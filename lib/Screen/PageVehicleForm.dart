@@ -29,7 +29,9 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
               fontSize: 20
             ),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, () {
+                initState();
+              }),
           width: 120,
         )
       ],
@@ -76,6 +78,7 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
   }
 
   Widget _btnSave(){
+    bool _btnDisabled = false;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32,vertical: 12),
       child: Container(
@@ -102,12 +105,17 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
                 fontSize: 18),
           ),
           onPressed: () async {
-            var result = await User().addVehicle(vehicleLicensePlateNumber);
-            if (result){
-              Navigator.of(context).pop();
-            }
-            else{
-              _dialogError();
+            if (!_btnDisabled){
+              setState(() {
+                _btnDisabled = !_btnDisabled;
+              });
+              var result = await User().addVehicle(vehicleLicensePlateNumber);
+              if (result){
+                Navigator.of(context).pop();
+              }
+              else{
+                _dialogError();
+              }
             }
           },
         ),
