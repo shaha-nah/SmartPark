@@ -7,7 +7,7 @@ import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 
 class PageSlotDirection extends StatefulWidget {
-  String parkingSlotID;
+  final String parkingSlotID;
 
   PageSlotDirection({Key key, @required this.parkingSlotID}): super(key:key);
 
@@ -95,7 +95,7 @@ class _PageSlotDirectionState extends State<PageSlotDirection>{
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: Text("Select a slot", style: TextStyle(color: Colors.black),
+        title: Text("Directions", style: TextStyle(color: Colors.black),
         ),
         // centerTitle: true,
         backgroundColor: Colors.white,

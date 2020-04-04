@@ -119,41 +119,72 @@ class _PageCheckOutState extends State<PageCheckOut> {
                 content: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("Make Payment"),
+                    Text(
+                      "Make Payment",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700
+                      ),
+                    ),
                     Divider(),
+                    SizedBox(height: 20,),
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("DATE"),
-                          Text("TIME")
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(dateFormat.format(snapshot.data["reservationDate"].toDate())),
-                          Column(
-                            children: <Widget>[
-                              Text(timeFormat.format(snapshot.data["reservationStartTime"].toDate())),
-                              Text("TO"),
-                              Text(timeFormat.format(snapshot.data["reservationCheckOutTime"].toDate()))
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text("AMOUNT"),
-                              Text(snapshot.data["reservationFee"].toString()),
-                            ],
-                          ),
-                        ],
-                      ),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "DATE",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            Text(
+                              dateFormat.format(snapshot.data["reservationDate"].toDate()),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "TIME",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            Text(timeFormat.format(snapshot.data["reservationStartTime"].toDate()) + " - " + timeFormat.format(snapshot.data["reservationEndTime"].toDate())),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "AMOUNT",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            Text("Rs " + snapshot.data["reservationFee"].toString()),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 actions: <Widget>[

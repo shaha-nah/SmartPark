@@ -149,11 +149,12 @@ class System{
   //   }
   // }
 
-   Future<int> calculateFee(parkingLot, startTime, endTime, checkOutTime, type) async{
+  Future<int> calculateFee(parkingLot, startTime, endTime, checkOutTime, type) async{
+    print("Wrong slot");
+    print("Add penalty fee");   
     var reservation= await User().getReservationDetails();
     var parkingDocument = await Firestore.instance.collection("parkingLot").document(parkingLot).get();
     var normalFee = endTime.difference(startTime).inMinutes * (parkingDocument["parkingLotNormalRate"]/60);
-    print(parkingDocument["parkingLotNormalRate"]/30);
     if (type == "checkout"){
       if (checkOutTime.isAfter(endTime)){
         if (reservation["reservationPenalty"] == true){

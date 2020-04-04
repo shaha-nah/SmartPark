@@ -400,7 +400,7 @@ class _SettingsItemState extends State<SettingsItem> {
 
   Widget _widgetPassword(){
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 32,vertical: 15,),
+      padding: EdgeInsets.symmetric(vertical: 15,),
       child: Material(
         elevation: 2.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
