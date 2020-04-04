@@ -71,7 +71,11 @@ class UserPage extends StatelessWidget {
 }
 
 class UserCard extends StatelessWidget {
-  static final User _user = User();
+  final User _user = User();
+  String name="";
+  String email = "";
+  String phoneNumber = "";
+  String credit = "";
 
   Widget _buildUserRow(){
     return FutureBuilder<dynamic>(
@@ -79,10 +83,10 @@ class UserCard extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           var value = snapshot.data;
-          var name = value['userName'];
-          var email = value['userEmail'];
-          var phoneNumber = value['userPhoneNumber'];
-          var credit = value["userCredit"].toString();
+          name = value['userName'];
+          email = value['userEmail'];
+          phoneNumber = value['userPhoneNumber'];
+          credit = value["userCredit"].toString();
           return Row(
             children: <Widget>[
               Parent(
