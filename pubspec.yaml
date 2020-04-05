@@ -45,6 +45,7 @@ dependencies:
   location: ^2.3.5
   flutter_slidable: ^0.5.4
   data_connection_checker: ^0.3.4
+  pull_to_refresh: ^1.5.8
 
 dev_dependencies:
   flutter_test:

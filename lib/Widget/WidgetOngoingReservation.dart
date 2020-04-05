@@ -1,6 +1,7 @@
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
@@ -349,6 +350,12 @@ class _WidgetOngoingReservation extends State<WidgetOngoingReservation> {
     );
   }
 
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  void _onRefresh(){
+    Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -365,10 +372,17 @@ class _WidgetOngoingReservation extends State<WidgetOngoingReservation> {
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
-      body: Stack(
-        children: <Widget>[
-          _reservationDetails(),
-        ],
+      // body: Stack(
+      //   children: <Widget>[
+      //     _reservationDetails(),
+      //   ],
+      // ),
+      body: SmartRefresher(
+        enablePullDown: true,
+        header: WaterDropHeader(),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        child: _reservationDetails(),
       ),
     );
   }

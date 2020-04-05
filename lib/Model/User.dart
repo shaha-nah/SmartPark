@@ -134,6 +134,20 @@ class User {
     return result;
   }
 
+  User _userFromSnapshot(DocumentSnapshot snapshot){
+    return User(
+      userCredit: snapshot.data["userCredit"],
+      userEmail: snapshot.data["userEmail"],
+      userName: snapshot.data["userName"],
+      userPhoneNumber: snapshot.data["userPhoneNumber"]
+    );
+  }
+  
+  Stream userData() async*{
+    final String uid = await getCurrentUser();
+    yield* Firestore.instance.collection("user").document(uid).snapshots();
+  }
+
   Future addVehicle(String vehiclePlateNumber) async {
     String userID = await getCurrentUser();
     List<dynamic> vehicles = await Vehicle().getVehiclePlateNumbers();

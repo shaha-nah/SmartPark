@@ -2,6 +2,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
@@ -601,6 +602,14 @@ class _WidgetReservationState extends State<WidgetReservation> {
     );
   }
 
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  void _onRefresh() async{
+    Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -617,12 +626,15 @@ class _WidgetReservationState extends State<WidgetReservation> {
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
-      body: Stack(
-        children: <Widget>[
-          _reservationDetails(),
-          _btnLotLocation(),
-        ],
+      body:SmartRefresher(
+        enablePullDown: true,
+        // enablePullUp: true,
+        header:WaterDropHeader(),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        child: _reservationDetails(),
       ),
+      floatingActionButton: _btnLotLocation(),
     );
   }
 }

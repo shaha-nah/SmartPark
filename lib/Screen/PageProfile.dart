@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
@@ -78,42 +79,56 @@ class UserCard extends StatelessWidget {
   String credit = "";
 
   Widget _buildUserRow(){
-    return FutureBuilder<dynamic>(
-      future: _user.getUserDetails(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          var value = snapshot.data;
-          name = value['userName'];
-          email = value['userEmail'];
-          phoneNumber = value['userPhoneNumber'];
-          credit = value["userCredit"].toString();
+    return StreamBuilder<dynamic>(
+      stream: _user.userData(),
+      builder: (context, snapshot){
+        if (snapshot.hasData){
           return Row(
             children: <Widget>[
               Parent(
-                style: userImageStyle, 
+                style: userImageStyle,
                 child: Icon(
                   Icons.person_outline,
-                  color: hex('#8860d0'),
-                )
+                  color: hex("#8860d0")
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Txt(name, style: nameTextStyle),
-                  // SizedBox(height: 5),
-                  Txt(email, style: nameDescriptionTextStyle),
-                  Txt(phoneNumber, style: nameDescriptionTextStyle),
-                  Txt("Credit: Rs " + credit, style: nameDescriptionTextStyle)
+                  Txt(snapshot.data["userName"], style: nameTextStyle,),
+                  Txt(snapshot.data["userEmail"], style: nameDescriptionTextStyle,),
+                  Txt(snapshot.data["userPhoneNumber"], style: nameDescriptionTextStyle,),
+                  Txt("Credit: Rs " + snapshot.data["userCredit"].toString(), style: nameDescriptionTextStyle,)
                 ],
-              )
+              ),
             ],
           );
-        } 
-        else {
-            return Container();
+        }
+        else{
+          return Container(child: Text("booooo"),);
         }
       }
     );
+    // ret
+    //           ),
+    //           Column(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: <Widget>[
+    //               Txt(name, style: nameTextStyle),
+    //               // SizedBox(height: 5),
+    //               Txt(email, style: nameDescriptionTextStyle),
+    //               Txt(phoneNumber, style: nameDescriptionTextStyle),
+    //               Txt("Credit: Rs " + credit, style: nameDescriptionTextStyle)
+    //             ],
+    //           )
+    //         ],
+    //       );
+    //     } 
+    //     else {
+    //         return Container();
+    //     }
+    //   }
+    // );
   }
 
   // Widget _buildUserStats() {

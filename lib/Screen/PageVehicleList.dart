@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/Model/Vehicle.dart';
@@ -58,32 +60,35 @@ class _PageVehicleListState extends State<PageVehicleList> {
 
 
   Widget widgetVehicle(){
-    return FutureBuilder<dynamic>(
-      future: _vehicle.getVehiclePlateNumbers(),
-      builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.done) {
-          if (snap.data.length == 0){
+    final user = Provider.of<User>(context);
+
+    return StreamBuilder<dynamic>(
+      stream: _vehicle.getVehicles(user.uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasData){
+          if (snapshot.data.documents.length == 0){
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 32, vertical: 20),
               child: Text("You have no vehicles"),
             );
           }
           return ListView.builder(
-            itemCount: snap.data.length,
-            itemBuilder: (context, index) {
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index){
+              DocumentSnapshot vehicleDocument  =snapshot.data.documents[index];
               return WidgetVehicleItem(
-                vehiclePlateNumber: (snap.data[index]),
+                vehiclePlateNumber: vehicleDocument.data["vehiclePlateNumber"],
                 onDelete: (vehicle) async{
                   _dialogConfirmDelete(vehicle);
                 },
                 onEdit: (vehicle){
-                  print ("edit");
+
                 },
               );
             },
           );
-        } 
-        else {
+        }
+        else{
           return Container();
         }
       }
