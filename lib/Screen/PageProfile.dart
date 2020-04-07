@@ -15,6 +15,7 @@ import 'package:division/division.dart';
 import 'package:smartpark/Screen/PageNotification.dart';
 import 'package:smartpark/Screen/PageRegister.dart';
 import 'package:smartpark/Screen/PageTransactionHistory.dart';
+import 'package:smartpark/Screen/PageWallet.dart';
 
 class PageProfile extends StatefulWidget {
   @override
@@ -73,11 +74,6 @@ class UserPage extends StatelessWidget {
 
 class UserCard extends StatelessWidget {
   final User _user = User();
-  String name="";
-  String email = "";
-  String phoneNumber = "";
-  String credit = "";
-
   Widget _buildUserRow(){
     return StreamBuilder<dynamic>(
       stream: _user.userData(),
@@ -105,30 +101,10 @@ class UserCard extends StatelessWidget {
           );
         }
         else{
-          return Container(child: Text("booooo"),);
+          return Container();
         }
       }
     );
-    // ret
-    //           ),
-    //           Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: <Widget>[
-    //               Txt(name, style: nameTextStyle),
-    //               // SizedBox(height: 5),
-    //               Txt(email, style: nameDescriptionTextStyle),
-    //               Txt(phoneNumber, style: nameDescriptionTextStyle),
-    //               Txt("Credit: Rs " + credit, style: nameDescriptionTextStyle)
-    //             ],
-    //           )
-    //         ],
-    //       );
-    //     } 
-    //     else {
-    //         return Container();
-    //     }
-    //   }
-    // );
   }
 
   // Widget _buildUserStats() {
@@ -291,6 +267,8 @@ class Settings extends StatelessWidget {
           ),
         ),
         SettingsItem( Icons.history, hex('#f172a1'), 'History', 'Your Transaction history'),
+
+        SettingsItem( Icons.attach_money, hex('#a1c3d1'), 'Wallet', 'Credit details'),
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
@@ -516,6 +494,9 @@ class _SettingsItemState extends State<SettingsItem> {
           if (selected == "Profile Settings"){
             var userDetails = await _user.getUserDetails();
             Navigator.push(context, RouteTransition(page: PageGeneralSettings(name: userDetails.data["userName"], phoneNumber: userDetails.data["userPhoneNumber"],)));
+          }
+          else if (selected == "Wallet"){
+            Navigator.push(context, RouteTransition(page: PageWallet()));
           }
           else if(selected == "Account Settings"){
             _dialogPassword("password");

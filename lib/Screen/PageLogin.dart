@@ -53,43 +53,6 @@ class _PageLoginState extends State<PageLogin>{
         )
       ],
     ).show();
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context){
-        // return AlertDialog(
-        //   backgroundColor: Colors.red,
-        //   title:Column(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: <Widget>[
-        //       Icon(
-        //         Icons.cancel,
-        //         color: Colors.white,
-        //         size: 100
-        //       ),
-        //       Text(
-        //         "ERROR",
-        //         style: TextStyle(
-        //           color: Colors.white,
-        //           fontSize: 30
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        //   content: Text(
-        //     "Invalid credentials"
-
-        //   ),
-        //   actions: <Widget>[
-        //     new FlatButton(
-        //       child: new Text("Try again"),
-        //       onPressed: (){
-        //         Navigator.of(context).pop();
-        //       },
-        //     ),
-        //   ],
-        // );
-    //   }
-    // );
   }
 
   Widget _txtEmail(){

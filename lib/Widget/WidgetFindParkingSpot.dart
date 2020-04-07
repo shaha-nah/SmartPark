@@ -35,7 +35,7 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
   DateTime _dtEndTime;
 
 
-  void _dialogError(error){
+  void _dialogError(error, val){
     Alert(
       context: context,
       type: AlertType.error,
@@ -51,7 +51,11 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
               fontSize: 20
             ),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: (){
+            for (int i = 0; i<val; i++){
+              Navigator.of(context).pop();
+            }
+          },
           width: 120,
         )
       ],
@@ -125,9 +129,14 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                     _btnDisabled = !_btnDisabled;
                   });
                   String _parkingSlot = await _system.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
-                  String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
-                  await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
-                  Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
+                  if (_parkingSlot == "none"){
+                    _dialogError("It seems like the parking is full.", 2);
+                  }
+                  else{
+                    String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
+                    await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
+                    Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
+                  }
                 }
               },
             ),
@@ -369,7 +378,7 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
           ),
           showTitleActions: true, onConfirm: (endtime) {
             if (endtime.isBefore(_dtStartTime)){
-              _dialogError("End time cannot be before start time");
+              _dialogError("End time cannot be before start time", 1);
             }
             else{
               setState(() {
@@ -460,19 +469,19 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                       }
                       else{
                         print(_dtEndTime.difference(_dtStartTime).inMinutes);
-                        _dialogError("Please make a reservation of at least half an hour");
+                        _dialogError("Please make a reservation of at least half an hour", 1);
                       }
                     }
                     else{
-                      _dialogError("Please choose a time in the future");
+                      _dialogError("Please choose a time in the future", 1);
                     }
                   }
                   else{
-                    _dialogError("Please fill in all the required fields");
+                    _dialogError("Please fill in all the required fields", 1);
                   }
                   break;
                 case DataConnectionStatus.disconnected:
-                  _dialogError("Please make sure you have an active internet connection");
+                  _dialogError("Please make sure you have an active internet connection", 1);
                   break;
               }
             });
@@ -492,7 +501,7 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
       ),
       onPressed: () {
         if (_chosenVehicle == "" || _dtDate == null || _dtStartTime == null || _dtEndTime == null){
-          _dialogError("Please enter all the details");
+          _dialogError("Please enter all the details", 1);
         }
         else{
           Navigator.push(context, RouteTransition(page: PageSelectSlot(vehicle: _chosenVehicle, date: _dtDate, startTime: _dtStartTime, endTime: _dtEndTime)));

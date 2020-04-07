@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smartpark/Model/ParkingLot.dart';
@@ -38,51 +41,11 @@ class System{
     }
   }
 
-  Future<List<dynamic>> showAvailableSlots(chosenDate, startTime, endTime) async{
-    //get list of all available parking slots
-    List<String> listAvailableSlots = await findAllParkingSlots(chosenDate, startTime, endTime);
-
-    var listAllParkingSlot = await ParkingLot().getListOfSlots();
-    listAllParkingSlot.sort((a, b) => a.length.compareTo(b.length));
-
-    List<String> listSlot = [];
-    List<bool> listStatus = [];
-    for (int i = 0; i < listAllParkingSlot.length; i++){
-      if (listAvailableSlots.contains(listAllParkingSlot[i])){
-        listSlot.add(listAllParkingSlot[i]);
-        listStatus.add(true);
-      }
-      else{
-        listSlot.add(listAllParkingSlot[i]);
-        listStatus.add(false);
-      }
-    }
-    
-    List<dynamic> result = [];
-    listSlot.forEach((slot) {
-      result.add(slot);
-    });
-    listStatus.forEach((status) {
-      result.add(status);
-    });
-    return result;
-  }
-
   Future<String> findParkingSlot(chosenDate, startTime, endTime) async{
-    List<String> freeSlots = await findAllParkingSlots(chosenDate, startTime, endTime);
-    return freeSlots[freeSlots.length -1];
-  }
-
-  Future findAllParkingSlots(chosenDate, startTime, endTime) async{
     DateTime date = DateTime(chosenDate.year, chosenDate.month, chosenDate.day, 0, 0, 0);
     startTime = startTime.subtract(new Duration(hours: 1));
     endTime = endTime.add(new Duration(hours: 1));
 
-    // var querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").getDocuments();
-    // List<DocumentSnapshot> documentParkingSlots = querySnapshotParkingSlots.documents;
-    // List<String> listParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){
-    //   return snapshot.documentID;
-    // }).toList();
     var listParkingSlot = await ParkingLot().getListOfSlots();
     var listFreeSlots = await ParkingLot().getListOfSlots();
 
@@ -109,7 +72,88 @@ class System{
         }
       }
     }
-    return listFreeSlots;
+    if (listFreeSlots.length == 0){
+      return "none";
+    }
+    else{
+      var index= 0 + Random().nextInt(listFreeSlots.length-1 - 0);
+      return listFreeSlots[index];
+    }
+  }
+
+  Stream getReservations(chosenDate){
+    DateTime date = DateTime(chosenDate.year, chosenDate.month, chosenDate.day, 0, 0, 0);
+    return Firestore.instance.collection("reservation").where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 5).snapshots();
+  }
+
+  Future findAllAvailableSlots(reservations, startTime, endTime) async{
+
+    startTime = startTime.subtract(new Duration(hours: 1));
+    endTime = endTime.add(new Duration(hours: 1));
+
+    var listFreeSlots = await ParkingLot().getListOfSlots();
+
+    for (int i = 0; i<reservations.length; i++){
+      if (!((startTime.isBefore((reservations[i]["reservationStartTime"]).toDate()) && endTime.isBefore((reservations[i]["reservationStartTime"]).toDate())) || ((startTime.isAfter((reservations[i]["reservationEndTime"]).toDate())) && (endTime.isAfter((reservations[i]["reservationEndTime"]).toDate()))))){
+        listFreeSlots.remove(reservations[i]["parkingSlotID"]);
+      }
+    }
+
+    var listAllParkingSlot = await ParkingLot().getListOfSlots();
+    listAllParkingSlot.sort((a, b) => a.length.compareTo(b.length));
+
+    List<String> listSlot = [];
+    List<bool> listStatus = [];
+    for (int i = 0; i < listAllParkingSlot.length; i++){
+      if (listFreeSlots.contains(listAllParkingSlot[i])){
+        listSlot.add(listAllParkingSlot[i]);
+        listStatus.add(true);
+      }
+      else{
+        listSlot.add(listAllParkingSlot[i]);
+        listStatus.add(false);
+      }
+    }
+    
+    List<dynamic> result = [];
+    listSlot.forEach((slot) {
+      result.add(slot);
+    });
+    listStatus.forEach((status) {
+      result.add(status);
+    });
+    return result;
+  }
+
+  Future<bool> checkSlotAvailability(chosenDate, startTime, endTime, slot) async{
+    
+    DateTime date = DateTime(chosenDate.year, chosenDate.month, chosenDate.day, 0, 0, 0);
+    startTime = startTime.subtract(new Duration(hours: 1));
+    endTime = endTime.add(new Duration(hours: 1));
+    bool free = true;
+
+    var reservations = await Firestore.instance.collection("reservation").where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 5).where("parkingSlotID", isEqualTo: slot).getDocuments();
+    List<DocumentSnapshot> reservation = reservations.documents;
+
+    if (reservation.length != 0){
+      List<dynamic> listStartTime = reservation.map((DocumentSnapshot snapshot){
+        return snapshot.data["reservationStartTime"].toDate();
+      }).toList();
+      List<dynamic> listEndTime = reservation.map((DocumentSnapshot snapshot){
+        return snapshot.data["reservationEndTime"].toDate();
+      }).toList();
+
+      for (int j = 0; j<listStartTime.length; j++){
+        if (!((startTime.isBefore(listStartTime[j]) && endTime.isBefore(listStartTime[j])) || ((startTime.isAfter(listEndTime[j])) && (endTime.isAfter(listEndTime[j]))))){
+          free = false;
+          return free;
+        }
+        else{
+          free = true;
+        }
+      }
+    }
+    return free;
   }
 
   Future setReservationCompleted() async{
@@ -126,32 +170,7 @@ class System{
     });
   }
 
-  // Future checkSlotAvailability(slot, userID, date, startTime, endTime) async{
-  //   bool free;
-  //   var reservations = await Firestore.instance.collection("reservation").where("parkingSlotID", isEqualTo: slot).where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 4).getDocuments();
-  //   List<DocumentSnapshot> reservation = reservations.documents;
-  //   if (reservation.length != 0){
-  //     //reservation exists
-  //     List<dynamic> listStartTime = reservation.map((DocumentSnapshot snapshot){
-  //       if (snapshot.data["userID"] != userID){
-  //         return snapshot.data["reservationStartTime"].toDate();
-  //       }
-  //     }).toList();
-  //     List<dynamic> listEndTime = reservation.map((DocumentSnapshot snapshot){
-  //       if (snapshot.data["userID"] != userID){
-  //         return snapshot.data["reservationEndTime"].toDate();
-  //       }
-  //     }).toList();
-
-  //     //check if reservation exists within that time interval
-
-      
-  //   }
-  // }
-
   Future<int> calculateFee(parkingLot, startTime, endTime, checkOutTime, type) async{
-    print("Wrong slot");
-    print("Add penalty fee");   
     var reservation= await User().getReservationDetails();
     var parkingDocument = await Firestore.instance.collection("parkingLot").document(parkingLot).get();
     var normalFee = endTime.difference(startTime).inMinutes * (parkingDocument["parkingLotNormalRate"]/60);

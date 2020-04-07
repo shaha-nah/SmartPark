@@ -294,7 +294,7 @@ class _PageRegisterState extends State<PageRegister>{
             _txtPassword(),
             _txtConfirmPassword(),
             _btnRegister(),
-            _btnLogin(),
+            // _btnLogin(),
           ],
         ),
       )

@@ -1,6 +1,7 @@
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/ParkingLot.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
@@ -28,6 +29,32 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
   final subtitles = ["Lot A", "Lot A", "Lot B"];
   DateFormat dateFormat = DateFormat("MMM d, yyyy");
   DateFormat timeFormat = DateFormat("HH: mm");
+
+  void _dialogError(){
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "OH NO!",
+      desc: "It seems like someone got to that slot first.",
+      buttons: [
+        DialogButton(
+          color: Colors.red,
+          child: Text(
+            "Try Again",
+            style: TextStyle(
+              color: Colors.white, 
+              fontSize: 20
+            ),
+          ),
+          onPressed: (){
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          width: 120,
+        )
+      ],
+    ).show();
+  }
 
   void _dialogConfirmReservation(_parkingSlot, _chosenVehicle, _dtDate, _dtStartTime, _dtEndTime){
     showDialog(
@@ -95,12 +122,14 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
               onPressed: () async{
                 // String _parkingSlot = await _user.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
                 String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
-                await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),
-                  (Route<dynamic> route) => false,
-                );
+                var result = await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
+                // print(result);
+                if (result){
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => WidgetBottomNavigation()), (Route<dynamic> route) => false,);
+                }
+                else{
+                  _dialogError();
+                }
               },
             ),
           ],
@@ -110,11 +139,18 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
   }
 
   Widget parkingLot(){
-    return FutureBuilder<dynamic>(
-          future: _system.showAvailableSlots(widget.date, widget.startTime, widget.endTime),
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            if (snapshot.connectionState == ConnectionState.done){
-              return CustomScrollView(
+    return StreamBuilder<dynamic>(
+      stream: _system.getReservations(widget.date),
+      builder: (BuildContext context, AsyncSnapshot streamSnapshot){
+        if (streamSnapshot.hasData) {
+          // var result = snapshot.data.documents[0]["parkingSlotID"];
+          // print(result);
+          // var result = _system.checkSlotAvailability(snapshot.data.documents, widget.startTime, widget.endTime);
+          return FutureBuilder<dynamic>(
+            future: _system.findAllAvailableSlots(streamSnapshot.data.documents, widget.startTime, widget.endTime),
+            builder: (BuildContext context, AsyncSnapshot futureSnapshot){
+              if (futureSnapshot.connectionState == ConnectionState.done){
+                return CustomScrollView(
                 slivers: <Widget>[
                   SliverGrid(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -125,7 +161,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        if (snapshot.data[index+10]){
+                        if (futureSnapshot.data[index+10]){
                           return Container(
                             padding: EdgeInsets.only(bottom: 22),
                             decoration: BoxDecoration(
@@ -138,13 +174,13 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                             ),
                             child: FlatButton(
                               child: Text(
-                                snapshot.data[index],
+                                futureSnapshot.data[index],
                                 style: TextStyle(
                                   color: Colors.green
                                 ),
                               ),
                               onPressed: (){
-                                return _dialogConfirmReservation(snapshot.data[index], widget.vehicle, widget.date, widget.startTime, widget.endTime);
+                                return _dialogConfirmReservation(futureSnapshot.data[index], widget.vehicle, widget.date, widget.startTime, widget.endTime);
                               },
                             ),
                           );
@@ -170,17 +206,23 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                           );
                         }
                       },
-                      childCount: ((snapshot.data.length/2).toInt()),
+                      childCount: ((futureSnapshot.data.length/2).toInt()),
                     ),
                   )
                 ],
               );
+              }
+              else{
+                return Container();
+              }
             }
-            else{
-              return Container();
-            }
-          }
-      );
+          );
+        }
+        else{
+          return Container();
+        }
+      },
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -218,18 +260,6 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
             ),
           ),
           Text("Entrance"),
-          // Container(
-          //   // decoration: BoxDecoration(
-          //   //   border: Border(
-          //   //     top: BorderSide(
-          //   //       color: Colors.black,
-          //   //       width: 3.0
-          //   //     ),
-          //   //   )
-          //   // ),
-          //   width: MediaQuery.of(context).size.width,
-          //   child: Text("Entrance"),
-          // ),
         ],
       )
     );

@@ -165,24 +165,32 @@ class User {
     }
   }
 
-  Future<void> makeReservation(DateTime date, DateTime startTime, DateTime endTime, String parkingLot, String parkingSlot, String vehiclePlateNumber) async{
+  Future<bool> makeReservation(DateTime date, DateTime startTime, DateTime endTime, String parkingLot, String parkingSlot, String vehiclePlateNumber) async{
     var userID = await getCurrentUser();
   
     var fee = await System().calculateFee(parkingLot, startTime, endTime, endTime, "normal");
-    
-    await Firestore.instance.collection("reservation").document().setData({
-      "parkingLotID": parkingLot,
-      "parkingSlotID": parkingSlot,
-      "reservationDate": date,
-      "reservationEndTime": endTime,
-      "reservationFee": fee,
-      "reservationStartTime": startTime,
-      "reservationStatus": 1,
-      "reservationSlotReallocation": "",
-      "userID": userID,
-      "vehicleID": vehiclePlateNumber
-    });
 
+    var result = await System().checkSlotAvailability(date, startTime, endTime, parkingSlot);
+    
+    // print(result);
+    if (result){
+      await Firestore.instance.collection("reservation").document().setData({
+        "parkingLotID": parkingLot,
+        "parkingSlotID": parkingSlot,
+        "reservationDate": date,
+        "reservationEndTime": endTime,
+        "reservationFee": fee,
+        "reservationStartTime": startTime,
+        "reservationStatus": 1,
+        "reservationSlotReallocation": "",
+        "userID": userID,
+        "vehicleID": vehiclePlateNumber
+      });
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   Future<String> getCurrentReservation() async{
@@ -320,6 +328,13 @@ class User {
     return await Firestore.instance.collection("reservation").document(reservationID).updateData({
       "reservationEndTime": endTime,
       "reservationFee": fee
+    });
+  }
+
+  Future<void> recharge(amount) async{
+    String userID = await getCurrentUser();
+    await Firestore.instance.collection("user").document(userID).updateData({
+      "userCredit": FieldValue.increment(int.parse(amount))
     });
   }
 }
