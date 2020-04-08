@@ -8,10 +8,10 @@ import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 
 class PageSelectSlot extends StatefulWidget {
-  String vehicle;
-  DateTime date;
-  DateTime startTime;
-  DateTime endTime;
+  final String vehicle;
+  final DateTime date;
+  final DateTime startTime;
+  final DateTime endTime;
 
   PageSelectSlot({Key key, @required this.vehicle, @required this.date, @required this.startTime, @required this.endTime}): super(key:key);
 
@@ -120,10 +120,8 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                 "OK",
               ),
               onPressed: () async{
-                // String _parkingSlot = await _user.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
                 String _parkingLotID = await _parkingLot.getParkingLot(_parkingSlot);
                 var result = await _user.makeReservation(_dtDate, _dtStartTime, _dtEndTime, _parkingLotID, _parkingSlot, _chosenVehicle);
-                // print(result);
                 if (result){
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => WidgetBottomNavigation()), (Route<dynamic> route) => false,);
                 }
@@ -143,9 +141,6 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
       stream: _system.getReservations(widget.date),
       builder: (BuildContext context, AsyncSnapshot streamSnapshot){
         if (streamSnapshot.hasData) {
-          // var result = snapshot.data.documents[0]["parkingSlotID"];
-          // print(result);
-          // var result = _system.checkSlotAvailability(snapshot.data.documents, widget.startTime, widget.endTime);
           return FutureBuilder<dynamic>(
             future: _system.findAllAvailableSlots(streamSnapshot.data.documents, widget.startTime, widget.endTime),
             builder: (BuildContext context, AsyncSnapshot futureSnapshot){
@@ -207,6 +202,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                         }
                       },
                       childCount: ((futureSnapshot.data.length/2).toInt()),
+                      
                     ),
                   )
                 ],
@@ -224,6 +220,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
       },
     );
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,7 +231,6 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
         ),
         title: Text("Select a slot", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),

@@ -33,7 +33,7 @@ class User {
     return FirebaseAuth.instance.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
-  Future updateUserData(String userName, String userEmail, String userPhoneNumber, int userCredit)async {
+  Future<void> updateUserData(String userName, String userEmail, String userPhoneNumber, int userCredit)async {
     return await Firestore.instance.collection("user").document(uid).setData({
       'userName': userName,
       'userEmail': userEmail,
@@ -134,15 +134,6 @@ class User {
     return result;
   }
 
-  User _userFromSnapshot(DocumentSnapshot snapshot){
-    return User(
-      userCredit: snapshot.data["userCredit"],
-      userEmail: snapshot.data["userEmail"],
-      userName: snapshot.data["userName"],
-      userPhoneNumber: snapshot.data["userPhoneNumber"]
-    );
-  }
-  
   Stream userData() async*{
     final String uid = await getCurrentUser();
     yield* Firestore.instance.collection("user").document(uid).snapshots();
@@ -172,7 +163,6 @@ class User {
 
     var result = await System().checkSlotAvailability(date, startTime, endTime, parkingSlot);
     
-    // print(result);
     if (result){
       await Firestore.instance.collection("reservation").document().setData({
         "parkingLotID": parkingLot,

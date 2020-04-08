@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/RouteTransition.dart';
-import 'package:smartpark/Screen/PageChangeName.dart';
 import 'package:smartpark/Screen/PageChangePassword.dart';
-import 'package:smartpark/Screen/PageChangePhoneNumber.dart';
 import 'package:smartpark/Screen/PageGeneralSettings.dart';
-import 'package:smartpark/Screen/PageHome.dart';
 import 'package:smartpark/Screen/PageLogin.dart';
 import 'package:smartpark/Screen/PageParkingHistory.dart';
 import 'package:division/division.dart';
-import 'package:smartpark/Screen/PageNotification.dart';
-import 'package:smartpark/Screen/PageRegister.dart';
-import 'package:smartpark/Screen/PageTransactionHistory.dart';
 import 'package:smartpark/Screen/PageWallet.dart';
 
 class PageProfile extends StatefulWidget {
@@ -32,7 +25,6 @@ class _PageProfileState extends State<PageProfile> {
         ),
         title: Text("Profile", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
@@ -61,9 +53,7 @@ class UserPage extends StatelessWidget {
       style: contentStyle(context),
       child: Column(
         children: <Widget>[
-          // Txt('Profile', style: titleStyle),
           UserCard(),
-          // ActionsRow(),
           SizedBox(height: 10,),
           Settings(),
         ],
@@ -107,31 +97,6 @@ class UserCard extends StatelessWidget {
     );
   }
 
-  // Widget _buildUserStats() {
-  //   return Parent(
-  //     style: userStatsStyle,
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: <Widget>[
-  //         // _buildUserStatsItem('846', 'Collect'),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildUserStatsItem(String value, String text) {
-  //   final TxtStyle textStyle = TxtStyle()
-  //     ..fontSize(20)
-  //     ..textColor(Colors.white);
-  //   return Column(
-  //     children: <Widget>[
-  //       Txt(value, style: textStyle),
-  //       SizedBox(height: 5),
-  //       Txt(text, style: nameDescriptionTextStyle),
-  //     ],
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Parent(
@@ -140,7 +105,6 @@ class UserCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           _buildUserRow(), 
-          // _buildUserStats()
         ],
       ),
     );
@@ -148,12 +112,10 @@ class UserCard extends StatelessWidget {
 
   //Styling
   static List<Color> color = [Color(0xff8860d0), Color(0xff5ab9ea)];
-  // static List<Color> color = [Colors.purple, Colors.blue];
   final ParentStyle userCardStyle = ParentStyle()
     ..height(100)
     ..padding(horizontal: 20.0, vertical: 10)
     ..alignment.center()
-    // ..background.hex('#3977FF')
     ..linearGradient(colors: color)
     ..borderRadius(all: 20.0)
     ..elevation(10, color: hex('#3977FF'));
@@ -176,74 +138,6 @@ class UserCard extends StatelessWidget {
     ..textColor(Colors.white.withOpacity(0.6))
     ..fontSize(12);
 }
-
-// class ActionsRow extends StatelessWidget {
-//   Widget _buildActionsItemTransaction(String title, IconData icon, context) {
-//     return Parent(
-//       gesture: Gestures()
-//       ..onTap((){
-//         Navigator.push(context, RouteTransition(page: PageTransactionHistory()));
-//       }),
-//       style: actionsItemStyle,
-//       child: Column(
-//         children: <Widget>[
-//           Parent(
-//             style: actionsItemIconStyle,
-//             child: Icon(icon, size: 20, color: Color(0xFF42526F)),
-//           ),
-//           Txt(title, style: actionsItemTextStyle)
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildActionsItemParking(String title, IconData icon, context) {
-//     return Parent(
-//       gesture: Gestures()
-//       ..onTap((){
-//         Navigator.push(context, RouteTransition(page: PageParkingHistory()));
-//       }),
-//       style: actionsItemStyle,
-//       child: Column(
-//         children: <Widget>[
-//           Parent(
-//             style: actionsItemIconStyle,
-//             child: Icon(icon, size: 20, color: Color(0xFF42526F)),
-//           ),
-//           Txt(title, style: actionsItemTextStyle)
-//         ],
-//       ),
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceAround,
-//       children: <Widget>[
-//         // _buildActionsItem('Rs 1,000', Icons.attach_money),
-//         _buildActionsItemTransaction('Transaction History', Icons.receipt, context),
-//         _buildActionsItemParking('Parking History', Icons.local_parking, context),
-//         // _buildActionsItem('Service', Icons.room_service),
-//       ],
-//     );
-//   }
-
-//   final ParentStyle actionsItemIconStyle = ParentStyle()
-//     ..alignmentContent.center()
-//     ..width(50)
-//     ..height(50)
-//     ..margin(bottom: 5)
-//     ..borderRadius(all: 30)
-//     ..background.hex('#F6F5F8')
-//     ..ripple(true);
-
-//   final ParentStyle actionsItemStyle = ParentStyle()..margin(vertical: 20.0);
-
-//   final TxtStyle actionsItemTextStyle = TxtStyle()
-//     ..textColor(Colors.black.withOpacity(0.8))
-//     ..fontSize(12);
-// }
 
 class Settings extends StatelessWidget {
 
@@ -283,9 +177,6 @@ class Settings extends StatelessWidget {
           ),
         ),
         SettingsItem(Icons.person, hex('#8860d0'), 'Profile Settings', 'Change your name & phone number'),
-        // SettingsItem( Icons.mail_outline, hex('#a1c3d1'), 'Email', 'Change your email'),
-        // SettingsItem( Icons.phone, hex('#e64389'), 'Phone Number', 'Change your phone number'),
-        // SettingsItem(Icons.notifications, hex('#5FD0D3'), 'Push Notification', 'Choose which notifications you want'),
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
@@ -357,11 +248,8 @@ class _SettingsItemState extends State<SettingsItem> {
             ),
           ),
           onPressed: () {
-            // print("boo");
             Navigator.of(context).pop();
             _dialogPassword("deleteAccount");
-            // // await _user.deleteAccount();
-            // Navigator.pushAndRemoveUntil(context, RouteTransition(page: PageRegister()), (route) => false);
           },
           width: 120,
         )
@@ -432,7 +320,6 @@ class _SettingsItemState extends State<SettingsItem> {
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          // title:
           content: new Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -510,10 +397,8 @@ class _SettingsItemState extends State<SettingsItem> {
           else if(selected == "Logout"){
             await _user.signOut(context);
           }
-        }),
-      // ..onTap((){
-      //   Navigator.push(context, RouteTransition(page: PageChangeName()));
-      // }),
+        }
+      ),
       child: Row(
         children: <Widget>[
           Parent(

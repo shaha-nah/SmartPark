@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -154,13 +153,6 @@ class System{
       }
     }
     return free;
-  }
-
-  Future setReservationCompleted() async{
-    final String reservationID = await User().getCurrentReservation();
-    return await Firestore.instance.collection("reservation").document(reservationID).updateData({
-      "reservationStatus": 5
-    });
   }
 
   Future setReservationOngoing() async{

@@ -17,25 +17,7 @@ class Vehicle{
     return list;
   }
 
-  Stream getVehicles(userID){
+  Stream<void> getVehicles(userID){
     return Firestore.instance.collection("vehicle").where("userID", isEqualTo: userID).where("markAsDeleted", isEqualTo: false).snapshots();
   }
-
-  // Stream<List<String>> getVehicles(userID){
-  //   Stream<QuerySnapshot> result = Firestore.instance.collection("vehicle").where("userID", isEqualTo: userID).where("markAsDeleted", isEqualTo: false).snapshots();
-  //   Stream<List<String>> temp = result.map(
-  //     (querySnapshot) => querySnapshot.documents.map((document){
-  //       return document.data["vehiclePlateNumber"];
-  //     }
-  //     ).toList()
-  //   );
-  //   return temp;
-  //   // Strea x = result.map(
-  //   //   (querySnapshot) => querySnapshot.documents.map(
-  //   //     (document) => document.data["vehiclePlateNumber"]
-  //   //   ).toList()
-  //   // );
-  //   // // print(x);
-  //   // return x;
-  // }
 }

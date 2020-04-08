@@ -2,7 +2,6 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/RouteTransition.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
@@ -14,7 +13,6 @@ class PageCheckOut extends StatefulWidget {
 
 class _PageCheckOutState extends State<PageCheckOut> {
   final User _user = User();
-  final System _system = System();
   
   DateFormat dateFormat = DateFormat("MMM d, yyyy");
   DateFormat timeFormat = DateFormat("HH: mm");
@@ -56,7 +54,6 @@ class _PageCheckOutState extends State<PageCheckOut> {
       context: context,
       builder: (BuildContext context){
         return  AlertDialog(
-          //title:
             content: new Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -115,7 +112,6 @@ class _PageCheckOutState extends State<PageCheckOut> {
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if (snapshot.connectionState == ConnectionState.done){
               return  AlertDialog(
-              //title:
                 content: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -230,7 +226,6 @@ class _PageCheckOutState extends State<PageCheckOut> {
     );
   }
 
-
   Widget _btnCheckOut(){
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 60),
@@ -238,7 +233,6 @@ class _PageCheckOutState extends State<PageCheckOut> {
         width: 800,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(100)),
-            // color: Colors.deepPurple,
             gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -297,7 +291,6 @@ class _PageCheckOutState extends State<PageCheckOut> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                
                   _btnCheckOut(),
                 ],
               ),

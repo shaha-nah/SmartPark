@@ -4,8 +4,8 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
 
 class PageGeneralSettings extends StatefulWidget {
-  String name;
-  String phoneNumber;
+  final String name;
+  final String phoneNumber;
 
   PageGeneralSettings({Key key, @required this.name, @required this.phoneNumber}): super(key:key);
   @override
@@ -168,6 +168,7 @@ class _PageGeneralSettingsState extends State<PageGeneralSettings> {
       ],
     );
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,16 +179,12 @@ class _PageGeneralSettingsState extends State<PageGeneralSettings> {
         ),
         title: Text("General Settings", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
       body: ListView(
         children: <Widget>[
-          // Expanded(
-            // child: 
-            txtFields(),
-          // ),
+          txtFields(),
           _btnSave()
         ],
       ),

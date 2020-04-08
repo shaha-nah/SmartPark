@@ -2,8 +2,6 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
-import 'package:smartpark/RouteTransition.dart';
-import 'package:smartpark/Screen/PageLogin.dart';
 
 class PageRegister extends StatefulWidget{
   static String tag = 'register-page';
@@ -17,7 +15,6 @@ class _PageRegisterState extends State<PageRegister>{
   final User _user = User();
   final _formKey = GlobalKey<FormState>();
 
-  //text field state
   String name = '';
   String email = '';
   String phoneNumber = '';
@@ -64,28 +61,22 @@ class _PageRegisterState extends State<PageRegister>{
         elevation: 2.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: TextFormField(
-          // validator: (value){
-          //   if (value.isEmpty){
-          //     _dialogError(context, "Please enter your name");
-          //   }
-          // },
-          // validator: (value) => value.isEmpty ? 'Please enter a name.' : null,
           onChanged: (String value){
             setState(() => name = value);
           },
           decoration: InputDecoration(
-              hintText: "Name",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.person_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Name",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.person_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -155,15 +146,6 @@ class _PageRegisterState extends State<PageRegister>{
         elevation: 2.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: TextFormField(
-          // validator: (value){
-          //   if (value.length < 8){
-          //     error = "Please enter a password with at least 8 characters.";
-          //   }
-          //   else{
-          //     return null;
-          //   }
-          // },
-          // validator: (value) => value.length < 8 ? 'Please enter a password with at least 8 characters.' : null,
           onChanged: (String value){
             setState(() => password = value);
           },
@@ -259,26 +241,12 @@ class _PageRegisterState extends State<PageRegister>{
             else{
               _dialogError("Please fill in all the fields");
             }
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => WidgetBottomNavigation()));
           },
         ),
       )
     );
   }
-  
-  Widget _btnLogin(){
-    return FlatButton(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      child: Text(
-        'Forgot password?',
-        style: TextStyle(color: hex("#5680e9")),
-      ),
-      onPressed: () {
-        Navigator.push(context, RouteTransition(page: PageLogin()));
-      },
-    );
-  }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,7 +262,6 @@ class _PageRegisterState extends State<PageRegister>{
             _txtPassword(),
             _txtConfirmPassword(),
             _btnRegister(),
-            // _btnLogin(),
           ],
         ),
       )

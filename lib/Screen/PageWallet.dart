@@ -35,7 +35,6 @@ class _PageWalletState extends State<PageWallet> {
       ],
     ).show();
   }
-
   
   Widget _label(){
     return Align(
@@ -108,12 +107,17 @@ class _PageWalletState extends State<PageWallet> {
           ),
           onPressed: () async {
             if (_amount != ""){
-              if (int.parse(_amount) <= 0){
-                _dialogError("Please enter a positive value");
+              try{
+                if (int.parse(_amount) <= 0){
+                  _dialogError("Please enter a positive value");
+                }
+                else{
+                  await _user.recharge(_amount);
+                  Navigator.of(context).pop();
+                }
               }
-              else{
-                await _user.recharge(_amount);
-                Navigator.of(context).pop();
+              catch(e){
+                _dialogError("Please enter a numeric value");
               }
             }
             else{
@@ -125,7 +129,6 @@ class _PageWalletState extends State<PageWallet> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +137,6 @@ class _PageWalletState extends State<PageWallet> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        // centerTitle: true,
         title: Text(
           "Recharge",
           style: TextStyle(

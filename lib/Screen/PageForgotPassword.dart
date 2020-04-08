@@ -4,8 +4,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Screen/PageLogin.dart';
 
-import 'PageResetPassword.dart';
-
 class PageForgotPassword extends StatefulWidget {
   static String tag = 'forgotPassword-page';
   @override
@@ -151,7 +149,6 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
         ),
         title: Text("Forgot Password?", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),

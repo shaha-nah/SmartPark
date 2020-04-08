@@ -1,7 +1,6 @@
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:smartpark/Model/Vehicle.dart';
 
 class WidgetVehicleItem extends StatelessWidget{
   final String vehiclePlateNumber;
@@ -18,13 +17,6 @@ class WidgetVehicleItem extends StatelessWidget{
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
         secondaryActions: <Widget>[
-          // IconSlideAction(
-          //   foregroundColor: hex("#34ceeb"),
-          //   caption: "Edit",
-          //   color: Colors.white,
-          //   icon: Icons.edit,
-          //   onTap: () => onEdit(vehiclePlateNumber),
-          // ),
           IconSlideAction(
             foregroundColor: Colors.red,
             caption: "Delete",
@@ -46,10 +38,6 @@ class WidgetVehicleItem extends StatelessWidget{
                 style: TextStyle(
                 ),
               ),
-              // trailing: Icon(
-              //   Icons.delete_outline,
-              //   color: Colors.red,
-              // ),
             ),
         ),
       ),

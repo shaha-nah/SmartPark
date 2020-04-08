@@ -6,7 +6,6 @@ import 'package:smartpark/Model/Reservation.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/RouteTransition.dart';
-import 'package:smartpark/Screen/PageHome.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 
 class PageReservationExpired extends StatefulWidget {
@@ -76,69 +75,68 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
       context: context,
       builder: (BuildContext context){
         return  AlertDialog(
-          //title:
-            content: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Divider(),Text("Thank You!",style: TextStyle(color: Colors.green),),
-                Text("Your transaction was successful"),
-                Divider(),
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Divider(),Text("Thank You!",style: TextStyle(color: Colors.green),),
+              Text("Your transaction was successful"),
+              Divider(),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "DATE",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      "TIME",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black54,
+                      ),
+                    )
+                  ],
+                ),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "DATE",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      Text(
-                        "TIME",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black54,
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(dateFormat.format(DateTime.now())),
-                      Text(timeFormat.format(DateTime.now())),
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "AMOUNT",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black54,
-                            ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(dateFormat.format(DateTime.now())),
+                    Text(timeFormat.format(DateTime.now())),
+                  ],
+                ),
+                SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "AMOUNT",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black54,
                           ),
-                          Text(price.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text("OK"),
-                onPressed: () async {
-                  Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
-                },
-              ),
+                        ),
+                        Text(price.toString()),
+                      ],
+                    ),
+                  ],
+                ),
             ],
-          );
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () async {
+                Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);
+              },
+            ),
+          ],
+        );
       }
     );
   }
@@ -152,7 +150,6 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if (snapshot.connectionState == ConnectionState.done){
               return  AlertDialog(
-              //title:
                 content: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -264,13 +261,11 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
 
   Widget _btnMakePayment(){
     return Padding(
-      // padding: EdgeInsets.symmetric(horizontal: 80,vertical: 70),
       padding: EdgeInsets.fromLTRB(80, 70, 80, 0),
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(100)),
-          // color: 
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

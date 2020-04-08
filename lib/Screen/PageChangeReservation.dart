@@ -5,15 +5,13 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:smartpark/Model/ParkingLot.dart';
-import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
 
 class PageChangeReservation extends StatefulWidget {
 
-  String date;
-  String startTime;
-  String endTime;
+  final String date;
+  final String startTime;
+  final String endTime;
 
   PageChangeReservation({Key key, @required this.date, @required this.startTime, @required this.endTime}): super(key:key);
   @override
@@ -52,6 +50,7 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
       ],
     ).show();
   }
+
   void _dialogConfirmReservation(){
     showDialog(
       context: context,
@@ -127,7 +126,6 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
             ),
             showTitleActions: true,
             minTime: DateTime.now(),
-            // maxTime: DateTime(2020, 02, 20), 
             onConfirm: (chosenDate) {
             DateFormat dateFormat = DateFormat("MMM d, yyyy");
             setState(() {
@@ -323,7 +321,6 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
         width: 800,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(100)),
-            // color: Colors.deepPurple,
             gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -390,6 +387,10 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
 
   @override
   Widget build(BuildContext context) {
+    final contentStyle = (BuildContext context) => ParentStyle()
+      ..overflow.scrollable()
+      ..padding(vertical: 30, horizontal: 20)
+      ..minHeight(MediaQuery.of(context).size.height - (2 * 30));
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: new AppBar(
@@ -402,18 +403,21 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            SizedBox(height: 40,),
-            _pickerDate(),
-            _pickerStartTime(),
-            _pickerEndTime(),
-            _btnReserve(),
-            _btnCancel(),
-          ],
+      body: Parent(
+        style: contentStyle(context),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              SizedBox(height: 40,),
+              _pickerDate(),
+              _pickerStartTime(),
+              _pickerEndTime(),
+              _btnReserve(),
+              _btnCancel(),
+            ],
+          ),
         ),
       ),
     );

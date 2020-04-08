@@ -8,8 +8,8 @@ import 'package:smartpark/Model/User.dart';
 
 class PageExtendReservation extends StatefulWidget {
 
-  DateTime originalStartTime;
-  DateTime originalEndTime;
+  final DateTime originalStartTime;
+  final DateTime originalEndTime;
 
   PageExtendReservation({Key key, @required this.originalStartTime, @required this.originalEndTime}): super(key:key);
   @override
@@ -85,7 +85,6 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
                 _endTime = '${endtime.hour}: ${endtime.minute}';
                 _dtEndTime = endtime;});
             }
-            
           }, 
           currentTime: widget.originalStartTime, locale: LocaleType.en);
           setState(() { });
@@ -139,7 +138,6 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
         width: 800,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(100)),
-            // color: Colors.deepPurple,
             gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

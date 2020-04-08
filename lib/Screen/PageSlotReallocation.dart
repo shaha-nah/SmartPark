@@ -29,7 +29,6 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(100)),
-          // color: 
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -86,13 +85,12 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
                     ),
                   ),
                   Text(
-                      "We are deeply for the inconvenience!",
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
-                      textAlign: TextAlign.center,
+                    "We are deeply for the inconvenience!",
+                    style: TextStyle(
+                      fontSize: 17,
                     ),
-                  // ),
+                    textAlign: TextAlign.center,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(

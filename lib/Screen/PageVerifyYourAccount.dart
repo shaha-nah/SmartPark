@@ -2,7 +2,6 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
-import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/RouteTransition.dart';
 import 'package:smartpark/Screen/PageLogin.dart';
 
@@ -12,8 +11,6 @@ class PageVerifyYourAccount extends StatefulWidget {
 }
 
 class _PageVerifyYourAccountState extends State<PageVerifyYourAccount> {
-
-  final User _user = User();
 
   void _dialogSuccess(){
     Alert(
@@ -80,7 +77,6 @@ class _PageVerifyYourAccountState extends State<PageVerifyYourAccount> {
         width: 800,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(100)),
-            // color: Colors.deepPurple,
             gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -108,21 +104,10 @@ class _PageVerifyYourAccountState extends State<PageVerifyYourAccount> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: new AppBar(
-      //   iconTheme: IconThemeData(
-      //     color: Colors.black,
-      //   ),
-      //   title: Text("Verify Your Account", style: TextStyle(color: Colors.black),
-      //   ),
-      //   // centerTitle: true,
-      //   backgroundColor: Colors.white,
-      //   elevation: 5.0,
-      // ),
       body:Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,

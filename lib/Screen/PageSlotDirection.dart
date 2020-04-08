@@ -1,10 +1,5 @@
-import 'package:division/division.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smartpark/Model/ParkingLot.dart';
-import 'package:smartpark/Model/System.dart';
-import 'package:smartpark/Model/User.dart';
-import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 
 class PageSlotDirection extends StatefulWidget {
   final String parkingSlotID;
@@ -87,6 +82,7 @@ class _PageSlotDirectionState extends State<PageSlotDirection>{
           }
       );
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +93,6 @@ class _PageSlotDirectionState extends State<PageSlotDirection>{
         ),
         title: Text("Directions", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
@@ -123,18 +118,6 @@ class _PageSlotDirectionState extends State<PageSlotDirection>{
             ),
           ),
           Text("Entrance"),
-          // Container(
-          //   // decoration: BoxDecoration(
-          //   //   border: Border(
-          //   //     top: BorderSide(
-          //   //       color: Colors.black,
-          //   //       width: 3.0
-          //   //     ),
-          //   //   )
-          //   // ),
-          //   width: MediaQuery.of(context).size.width,
-          //   child: Text("Entrance"),
-          // ),
         ],
       )
     );

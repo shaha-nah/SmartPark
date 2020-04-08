@@ -13,7 +13,6 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
-  final User _user = User();
   bool _isEmailVerified = false;
 
   Future<void> _checkEmailVerification() async{

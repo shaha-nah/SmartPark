@@ -243,7 +243,6 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
             ),
             showTitleActions: true,
             minTime: DateTime.now(),
-            // maxTime: DateTime(2020, 02, 20), 
             onConfirm: (chosenDate) {
             DateFormat dateFormat = DateFormat("MMM d, yyyy");
             setState(() {
@@ -439,7 +438,6 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
         width: 800,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(100)),
-            // color: Colors.deepPurple,
             gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

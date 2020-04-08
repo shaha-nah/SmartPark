@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
-import 'package:smartpark/Screen/PageChangePhoneNumber.dart';
-import 'package:smartpark/Screen/PageProfile.dart';
 
 class PageChangePassword extends StatefulWidget {
   @override
@@ -14,7 +10,6 @@ class PageChangePassword extends StatefulWidget {
 
 class _PageChangePasswordState extends State<PageChangePassword> {
   final User _user = User();
-  // String _currentPassword;
   String _newPassword = "";
   String _confirmPassword = "";
 
@@ -40,6 +35,7 @@ class _PageChangePasswordState extends State<PageChangePassword> {
       ],
     ).show();
   }
+
   Widget _widgetNewPassword(){
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32,vertical: 15,),
@@ -72,7 +68,7 @@ class _PageChangePasswordState extends State<PageChangePassword> {
     );
   }
 
-    void _dialogSuccess(message){
+  void _dialogSuccess(message){
     Alert(
       context: context,
       type: AlertType.success,
@@ -200,7 +196,6 @@ class _PageChangePasswordState extends State<PageChangePassword> {
       ),
       body:ListView(
         children: <Widget>[
-          // _widgetCurrentPassword(),
           _widgetNewPassword(),
           _widgetConfirmPassword(),
           _widgetButtonSave()

@@ -6,7 +6,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/Model/Vehicle.dart';
 import 'package:smartpark/Screen/PageVehicleForm.dart';
-import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 import 'package:smartpark/Widget/WidgetVehicleItem.dart';
 
 class PageVehicleList extends StatefulWidget {
@@ -58,7 +57,6 @@ class _PageVehicleListState extends State<PageVehicleList> {
     ).show();
   }  
 
-
   Widget widgetVehicle(){
     final user = Provider.of<User>(context);
 
@@ -95,7 +93,6 @@ class _PageVehicleListState extends State<PageVehicleList> {
     );
   }
   
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +101,6 @@ class _PageVehicleListState extends State<PageVehicleList> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        // centerTitle: true,
         title: Text(
           "Vehicles",
           style: TextStyle(

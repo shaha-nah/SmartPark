@@ -51,7 +51,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
     ).show();
   }
 
-
   int _reservationStatus;
   String _chosenVehicle;
 
@@ -86,7 +85,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
       context: context,
       builder: (BuildContext context){
         return  AlertDialog(
-          //title:
             content: new Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -167,7 +165,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if (snapshot.connectionState == ConnectionState.done){
               return  AlertDialog(
-              //title:
                 content: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -281,7 +278,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
       }
     );
   }
-
 
   Widget vehicles(){
     return Container(
@@ -430,7 +426,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
     if (status == 1){
       if (DateTime.now().isAfter(startTime)){
         _system.setReservationOngoing();
-        // Navigator.push(context, RouteTransition(page: PageHome()));
         return _countdownTo(DateTime.now(), endTime, Colors.red);
       }
       return _countdownTo(DateTime.now(), startTime, hex("#5ab9ea"));
@@ -439,9 +434,9 @@ class _WidgetReservationState extends State<WidgetReservation> {
       return _countdownTo(DateTime.now(), endTime, Colors.red);
     }
     else if (status == 3){
-      // return _countdownTo(DateTime.now(), endTime, hex("#5ab9ea"));
       Navigator.push(context, RouteTransition(page: PageHome()));
     }
+    return Container();
   }
 
   Widget _countdownTo(DateTime startTime, DateTime endTime, Color color){
@@ -503,8 +498,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
             child: Container(
               alignment: Alignment(0.0, 0.0),
               height: 800,
-              // child: Card(
-              //   color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(30),
                   child: ListView(
@@ -575,7 +568,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
                   ),
                 ),
               ),
-            // ),
           );
         }
         else{
@@ -628,7 +620,6 @@ class _WidgetReservationState extends State<WidgetReservation> {
       ),
       body:SmartRefresher(
         enablePullDown: true,
-        // enablePullUp: true,
         header:WaterDropHeader(),
         controller: _refreshController,
         onRefresh: _onRefresh,

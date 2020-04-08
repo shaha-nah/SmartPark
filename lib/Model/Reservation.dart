@@ -52,7 +52,6 @@ class Reservation{
     }
 
   Future getExpiredReservation() async{
-    print("boo");
     final String userID = await User().getCurrentUser();
     var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
     List<DocumentSnapshot> reservation = reservations.documents;
@@ -60,20 +59,6 @@ class Reservation{
       if ((reservation[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (reservation[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
         return reservation[i];
       }
-    }
-  }
-
-  Future<String> getCurrentReservation() async{
-    final String userID = await User().getCurrentUser();
-    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
-    List<DocumentSnapshot> reservation = reservations.documents;
-    for (int i = 0; i< reservation.length; i++){
-      print("boo");
-      print(reservation[i].documentID);
-      if ((reservation[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (reservation[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
-        return "expired";
-      }
-      return reservation[i].documentID;
     }
   }
 

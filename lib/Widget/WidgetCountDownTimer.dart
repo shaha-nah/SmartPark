@@ -28,8 +28,6 @@ class _WidgetCountDownTimerState extends State<WidgetCountDownTimer>
     return widget.countDownFormatter != null
         ? widget.countDownFormatter(duration.inSeconds)
         : formatHHMMSS(duration.inSeconds);
-      // In case user doesn't provide formatter use the default one
-     // for that create a method which will be called formatHHMMSS or whatever you like
   }
 
   @override
@@ -46,28 +44,6 @@ class _WidgetCountDownTimerState extends State<WidgetCountDownTimer>
         widget.whenTimeExpires();
       }
     });
-  }
-
-  @override
-  void didUpdateWidget(WidgetCountDownTimer oldWidget) {
-    if (widget.secondsRemaining != oldWidget.secondsRemaining) {
-      setState(() {
-        duration = new Duration(seconds: widget.secondsRemaining);
-        _controller.dispose();
-        _controller = new AnimationController(
-          vsync: this,
-          duration: duration,
-        );
-        _controller.reverse(from: widget.secondsRemaining.toDouble());
-        _controller.addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            widget.whenTimeExpires();
-          } else if (status == AnimationStatus.dismissed) {
-            print("Animation Complete");
-          }
-        });
-      });
-    }
   }
 
   @override

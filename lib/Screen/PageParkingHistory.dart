@@ -35,7 +35,6 @@ final User _user = User();
               String parkingSlot = snap.data[index]["parkingSlotID"];
               int status = snap.data[index]["reservationStatus"];
               if (status == 4){
-                // print(snap.data);
                 String checkInTime;
                 String checkOutTime;
                 var checkin = snap.data[index]["reservationCheckInTime"];
@@ -258,55 +257,6 @@ final User _user = User();
                     ),
                   ),
                 );
-                // return Card(
-                //   child: Row(
-                //     mainAxisSize: MainAxisSize.max,
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: <Widget>[
-                //       Column(
-                //         mainAxisAlignment: MainAxisAlignment.start,
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: <Widget>[
-                //           Text(
-                //             date,
-                //             style: TextStyle(
-                //               fontSize: 25
-                //             ),
-                //             textAlign: TextAlign.left,
-                //           ),
-                //           Text(
-                //             "Reserved: " + startTime + " - " + endTime,
-                //             style: TextStyle(
-                //               fontSize: 16
-                //             ),
-                //             textAlign: TextAlign.left,
-                //           ),
-                //         ],
-                //       ),
-                //       Column(
-                //         mainAxisAlignment: MainAxisAlignment.end,
-                //         mainAxisSize: MainAxisSize.max,
-                //         children: <Widget>[
-                //           Container(
-                //             padding: EdgeInsets.all(5),
-                //             decoration: BoxDecoration(
-                //               border: Border.all(
-                //                 color: Colors.red,
-                //               ),
-                //               borderRadius: BorderRadius.circular(12)
-                //             ),
-                //             child: Text(
-                //               "Expired"
-                //             ),
-                //           ),
-                //           Text(
-                //             "Rs" + paymentFee
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // );
               }
               else{
                 //cancelled
@@ -429,7 +379,6 @@ final User _user = User();
         ),
         title: Text("Parking History", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),

@@ -23,7 +23,6 @@ class _WidgetBottomNavigation extends State<WidgetBottomNavigation>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: new AppBar(),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,

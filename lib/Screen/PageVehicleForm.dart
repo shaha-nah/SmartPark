@@ -2,7 +2,6 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
-import 'package:smartpark/Model/Vehicle.dart';
 
 class PageVehicleForm extends StatefulWidget{
 
@@ -134,7 +133,6 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
         ),
         title: Text("Vehicle Details", style: TextStyle(color: Colors.black),
         ),
-        // centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),

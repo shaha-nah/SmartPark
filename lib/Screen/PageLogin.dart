@@ -17,9 +17,7 @@ class PageLogin extends StatefulWidget{
 class _PageLoginState extends State<PageLogin>{
   final User _user = User();
   final _formKey = GlobalKey<FormState>();
-
-  // String errorTitle = '';
-  // String errorContent = '';
+  
   String email = '';
   String password = '';
 
@@ -121,19 +119,7 @@ class _PageLoginState extends State<PageLogin>{
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          // boxShadow: [ 
-          //   BoxShadow(
-          //     color: hex("#ff687e"),
-          //     blurRadius: 20.0,
-          //     spreadRadius: 2.0,
-          //     offset: Offset(
-          //       10.0,
-          //       5.0,
-          //     ),
-          //   ),
-          // ],
           borderRadius: BorderRadius.all(Radius.circular(100)),
-          // color: 
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -164,7 +150,6 @@ class _PageLoginState extends State<PageLogin>{
                 Navigator.push(context, RouteTransition(page: Wrapper()));
               }
             }
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => WidgetBottomNavigation()));
           },
         ),
       )
@@ -232,17 +217,6 @@ class _PageLoginState extends State<PageLogin>{
       ),
     );
   }
-
-  // Widget _lblError(){
-  //   return Center(
-  //     child: Text(
-  //       error,
-  //       style: TextStyle(
-  //         color: Colors.red,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
