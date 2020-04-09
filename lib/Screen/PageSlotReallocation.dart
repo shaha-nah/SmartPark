@@ -2,6 +2,7 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
+import 'package:smartpark/RouteTransition.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 
 class PageSlotReallocation extends StatefulWidget {
@@ -43,17 +44,14 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
           child: Text(
             "I understand!",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             await _system.reallocate(slot);
-            Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => WidgetBottomNavigation()),
-                  (Route<dynamic> route) => true,
-                );
+            Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()),(Route<dynamic> route) => false,);
           },
         ),
       )

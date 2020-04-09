@@ -82,50 +82,50 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
               Text("Your transaction was successful"),
               Divider(),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "DATE",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black54,
-                      ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "DATE",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black54,
                     ),
-                    Text(
-                      "TIME",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black54,
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(dateFormat.format(DateTime.now())),
-                    Text(timeFormat.format(DateTime.now())),
-                  ],
-                ),
-                SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "AMOUNT",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black54,
-                          ),
+                  ),
+                  Text(
+                    "TIME",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black54,
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(dateFormat.format(DateTime.now())),
+                  Text(timeFormat.format(DateTime.now())),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "AMOUNT",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black54,
                         ),
-                        Text(price.toString()),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      Text(price.toString()),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
           actions: <Widget>[
@@ -280,9 +280,10 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
           child: Text(
             "Make Payment",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             var reservation = await _user.getReservationDetails();

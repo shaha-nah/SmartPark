@@ -66,18 +66,18 @@ class _PageLoginState extends State<PageLogin>{
           },
           cursorColor: Colors.deepPurple,
           decoration: InputDecoration(
-              hintText: "Email",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.mail_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Email",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.mail_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -96,18 +96,18 @@ class _PageLoginState extends State<PageLogin>{
           cursorColor: Colors.deepPurple,
           obscureText: true,
           decoration: InputDecoration(
-              hintText: "Password",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Password",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.lock_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -134,9 +134,10 @@ class _PageLoginState extends State<PageLogin>{
           child: Text(
             "Login",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             if (_formKey.currentState.validate()){
@@ -161,7 +162,9 @@ class _PageLoginState extends State<PageLogin>{
       padding: EdgeInsets.symmetric(vertical: 12),
       child: Text(
         'Forgot password?',
-        style: TextStyle(color: hex("#5680e9")),
+        style: TextStyle(
+          color: hex("#5680e9")
+        ),
       ),
       onPressed: () {
         Navigator.push(context, RouteTransition(page: PageForgotPassword()));

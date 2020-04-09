@@ -201,9 +201,14 @@ class User {
     return reservationDocument;
   }
 
+  Stream getReservationData() async*{
+    final reservationID = await getCurrentReservation();
+    yield* Firestore.instance.collection("reservation").document(reservationID).snapshots();
+  }
+
   Future<List<dynamic>> getParkingHistory() async{
     String userID = await getCurrentUser();
-    var result = await Firestore.instance.collection('reservation').where("userID", isEqualTo: userID).where("reservationStatus", isGreaterThan: 4).getDocuments();
+    var result = await Firestore.instance.collection('reservation').where("userID", isEqualTo: userID).orderBy("reservationDate", descending: true).getDocuments();
     List<DocumentSnapshot> templist = result.documents;
     List<dynamic> list = templist.map((DocumentSnapshot snapshot){
       return snapshot.data;

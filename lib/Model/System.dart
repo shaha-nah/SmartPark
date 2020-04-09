@@ -169,10 +169,10 @@ class System{
     if (type == "checkout"){
       if (checkOutTime.isAfter(endTime)){
         if (reservation["reservationPenalty"] == true){
-          return normalFee.toInt() + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60) + parkingDocument["parkingLotPenaltyFee"];
+          return (normalFee.toInt() + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60) + parkingDocument["parkingLotPenaltyFee"]).toInt();
         }
         else{
-          return normalFee.toInt() + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60);
+          return (normalFee.toInt() + checkOutTime.difference(endTime).inMinutes * (parkingDocument["parkingLotLateFee"]/60)).toInt();
         }
       }
       else{
@@ -188,7 +188,7 @@ class System{
       return normalFee.toInt() + parkingDocument["parkingLotExpirationFee"];
     }
     else if (type == "cancellation"){
-      return normalFee.toInt() + parkingDocument["parkingLotCancellationFee"];
+      return parkingDocument["parkingLotCancellationFee"];
     }
     else{
       return normalFee.toInt();

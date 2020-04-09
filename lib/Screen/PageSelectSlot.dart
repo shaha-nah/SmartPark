@@ -24,9 +24,6 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
   final ParkingLot _parkingLot = ParkingLot();
   final System _system = System();
   
-  final titles = ['Slot 1', "Slot 4", "Slot 8"];
-
-  final subtitles = ["Lot A", "Lot A", "Lot B"];
   DateFormat dateFormat = DateFormat("MMM d, yyyy");
   DateFormat timeFormat = DateFormat("HH: mm");
 
@@ -148,8 +145,8 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                 return CustomScrollView(
                 slivers: <Widget>[
                   SliverGrid(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200.0,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
                       mainAxisSpacing: 30.0,
                       crossAxisSpacing: 50.0,
                       childAspectRatio: 4.0,
@@ -202,7 +199,6 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                         }
                       },
                       childCount: ((futureSnapshot.data.length/2).toInt()),
-                      
                     ),
                   )
                 ],

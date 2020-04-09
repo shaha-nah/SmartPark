@@ -13,12 +13,12 @@ import 'package:smartpark/Screen/PageVehicleForm.dart';
 import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 
-class WidgetFindParkingSpot extends StatefulWidget {
+class PageFindParkingSpot extends StatefulWidget {
   @override
-  _WidgetFindParkingSpotState createState() => _WidgetFindParkingSpotState();
+  _PageFindParkingSpotState createState() => _PageFindParkingSpotState();
 }
 
-class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
+class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
   final Vehicle _vehicle = Vehicle();
   final User _user = User();
   final ParkingLot _parkingLot = ParkingLot();
@@ -34,6 +34,7 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
   DateTime _dtStartTime;
   DateTime _dtEndTime;
 
+  DateFormat timeFormat = DateFormat("HH: mm");
 
   void _dialogError(error, val){
     Alert(
@@ -147,13 +148,16 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
   }
 
   Widget _lblRide(){
-    return Container(
-      margin: EdgeInsetsDirectional.only(top:40),
-      child: Text(
-        "Make a Reservation",
-        style: TextStyle(
-          fontSize: 23,
-          fontWeight: FontWeight.w600
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+        child: Text(
+          "Select a vehicle",
+          style: TextStyle(
+            color: Colors.black54,
+            fontWeight: FontWeight.bold
+          ),
         ),
       ),
     );
@@ -188,40 +192,39 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
             );
           }
           return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: snap.data.length,
-              itemBuilder: (context, index){
-                return GestureDetector(
-                  onTap: () => setState(() => _chosenVehicle=snap.data[index]),
-                  child: Container(
-                    width: 100,
-                    margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    decoration: _chosenVehicle == snap.data[index] ?  BoxDecoration(
-                      borderRadius: BorderRadius.circular(25.0),
-                      border: Border.all(
-                        color: hex("#84ceeb"),
-                        width: 2
-                      )
-                    ) : BoxDecoration(
-                      border: Border.all(color: Colors.white)
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.directions_car,
-                          color: hex("#5680e9"),
-                        ),
-                        Text(
-                          snap.data[index]
-                        ),
-                      ],
-                    ),
+            scrollDirection: Axis.horizontal,
+            itemCount: snap.data.length,
+            itemBuilder: (context, index){
+              return GestureDetector(
+                onTap: () => setState(() => _chosenVehicle=snap.data[index]),
+                child: Container(
+                  width: 100,
+                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  decoration: _chosenVehicle == snap.data[index] ?  BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    border: Border.all(
+                      color: hex("#84ceeb"),
+                      width: 2
+                    )
+                  ) : BoxDecoration(
+                    border: Border.all(color: Colors.white)
                   ),
-                );
-              },
-            
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.directions_car,
+                        color: hex("#5680e9"),
+                      ),
+                      Text(
+                        snap.data[index]
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         }
         return Container();
@@ -234,7 +237,8 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0)),
+          borderRadius: BorderRadius.circular(30.0)
+        ),
         elevation: 4.0,
         onPressed: () {
           DatePicker.showDatePicker(context,
@@ -274,9 +278,10 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                         Text(
                           " $_date",
                           style: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0),
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0
+                          ),
                         ),
                       ],
                     ),
@@ -301,7 +306,8 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0)),
+          borderRadius: BorderRadius.circular(30.0)
+        ),
         elevation: 4.0,
         onPressed: () {
           DatePicker.showTimePicker(
@@ -311,7 +317,7 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
             ),
             showTitleActions: true, onConfirm: (starttime) {
               setState(() {
-                _startTime = '${starttime.hour}: ${starttime.minute}';
+                _startTime = timeFormat.format(starttime);
                 _dtStartTime = starttime;
               });
             }, 
@@ -339,9 +345,10 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                         Text(
                           " $_startTime",
                           style: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0),
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0
+                          ),
                         ),
                       ],
                     ),
@@ -366,7 +373,8 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0)),
+          borderRadius: BorderRadius.circular(30.0)
+        ),
         elevation: 4.0,
         onPressed: () {
           DatePicker.showTimePicker(
@@ -381,10 +389,9 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
             }
             else{
               setState(() {
-                _endTime = '${endtime.hour}: ${endtime.minute}';
+                _endTime = timeFormat.format(endtime);
                 _dtEndTime = endtime;});
             }
-            
           }, 
           currentTime: _dtStartTime, locale: LocaleType.en);
           setState(() { });
@@ -409,9 +416,10 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
                         Text(
                           " $_endTime",
                           style: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0),
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0
+                          ),
                         ),
                       ],
                     ),
@@ -452,9 +460,10 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
           child: Text(
             "Reserve",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             var listener = DataConnectionChecker().onStatusChange.listen((status) {
@@ -495,7 +504,9 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
     return FlatButton(
       child: Text(
         'Select Slot',
-        style: TextStyle(color: hex("#5680e9")),
+        style: TextStyle(
+          color: hex("#5680e9")
+        ),
       ),
       onPressed: () {
         if (_chosenVehicle == "" || _dtDate == null || _dtStartTime == null || _dtEndTime == null){
@@ -511,11 +522,25 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
   @override
   Widget build(BuildContext context) {
     final contentStyle = (BuildContext context) => ParentStyle()
-    ..overflow.scrollable()
-    ..padding(vertical: 30, horizontal: 20)
-    ..minHeight(MediaQuery.of(context).size.height - (2 * 30));
+      ..overflow.scrollable()
+      ..padding(vertical: 30, horizontal: 20)
+      ..minHeight(MediaQuery.of(context).size.height - (2 * 30));
+
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: new AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        title: Text(
+          "Make a Reservation",
+          style: TextStyle(
+            color: Colors.black
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 5.0,
+      ),
       body: Parent(
         style: contentStyle(context),
         child: Container(
@@ -523,8 +548,6 @@ class _WidgetFindParkingSpotState extends State<WidgetFindParkingSpot> {
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 _lblRide(),
                 Container(

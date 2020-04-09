@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 
 class PageMap extends StatefulWidget {
   PageMap({Key key, this.title}) : super(key: key);
+
   final String title;
 
   @override
@@ -14,7 +15,6 @@ class PageMap extends StatefulWidget {
 }
 
 class _PageMap extends State<PageMap> {
-
   StreamSubscription _locationSubscription;
   Location _locationTracker = Location();
   Marker markerSource;

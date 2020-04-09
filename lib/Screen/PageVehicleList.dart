@@ -9,8 +9,6 @@ import 'package:smartpark/Screen/PageVehicleForm.dart';
 import 'package:smartpark/Widget/WidgetVehicleItem.dart';
 
 class PageVehicleList extends StatefulWidget {
-  static String tag = 'vehicleList-page';
-
   @override
   _PageVehicleListState createState() => _PageVehicleListState();
 }
@@ -79,9 +77,7 @@ class _PageVehicleListState extends State<PageVehicleList> {
                 onDelete: (vehicle) async{
                   _dialogConfirmDelete(vehicle);
                 },
-                onEdit: (vehicle){
-
-                },
+                onEdit: (vehicle){},
               );
             },
           );

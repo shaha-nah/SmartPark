@@ -15,72 +15,72 @@ class _PageSlotDirectionState extends State<PageSlotDirection>{
 
   Widget parkingLot(){
     return FutureBuilder<dynamic>(
-          future: _parkingLot.getReservedLot(),
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            if (snapshot.connectionState == ConnectionState.done){
-              return CustomScrollView(
-                slivers: <Widget>[
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200.0,
-                      mainAxisSpacing: 30.0,
-                      crossAxisSpacing: 50.0,
-                      childAspectRatio: 4.0,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        if (snapshot.data[index] != widget.parkingSlotID){
-                          return Container(
-                            padding: EdgeInsets.only(bottom: 22),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.black,
-                                  width: 3.0
-                                ),
-                              )
+      future: _parkingLot.getReservedLot(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if (snapshot.connectionState == ConnectionState.done){
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 30.0,
+                  crossAxisSpacing: 50.0,
+                  childAspectRatio: 4.0,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (snapshot.data[index] != widget.parkingSlotID){
+                      return Container(
+                        padding: EdgeInsets.only(bottom: 22),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black,
+                              width: 3.0
                             ),
-                            child: Text(
-                              snapshot.data[index],
-                              style: TextStyle(
-                                color: Colors.black
-                              ),
-                              textAlign: TextAlign.center,
+                          )
+                        ),
+                        child: Text(
+                          snapshot.data[index],
+                          style: TextStyle(
+                            color: Colors.black
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                    else{
+                      return Container(
+                        padding: EdgeInsets.only(bottom: 22),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black,
+                              width: 3.0
                             ),
-                          );
-                        }
-                        else{
-                          return Container(
-                            padding: EdgeInsets.only(bottom: 22),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.black,
-                                  width: 3.0
-                                ),
-                              )
-                            ),
-                            child: Text(
-                              snapshot.data[index],
-                              style: TextStyle(
-                                color: Colors.green
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          );
-                        }
-                      },
-                      childCount: snapshot.data.length,
-                    ),
-                  )
-                ],
-              );
-            }
-            else{
-              return Container();
-            }
-          }
-      );
+                          )
+                        ),
+                        child: Text(
+                          snapshot.data[index],
+                          style: TextStyle(
+                            color: Colors.green
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                  },
+                  childCount: snapshot.data.length,
+                ),
+              )
+            ],
+          );
+        }
+        else{
+          return Container();
+        }
+      }
+    );
   }
   
   @override

@@ -4,14 +4,11 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
 
 class PageRegister extends StatefulWidget{
-  static String tag = 'register-page';
-
   @override
   _PageRegisterState createState() => _PageRegisterState();
 }
 
 class _PageRegisterState extends State<PageRegister>{
-
   final User _user = User();
   final _formKey = GlobalKey<FormState>();
 
@@ -94,18 +91,18 @@ class _PageRegisterState extends State<PageRegister>{
             setState(() => email = value);
           },
           decoration: InputDecoration(
-              hintText: "Email",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.mail_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Email",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.mail_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding:EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -118,22 +115,23 @@ class _PageRegisterState extends State<PageRegister>{
         elevation: 2.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: TextFormField(
+          keyboardType: TextInputType.number,
           onChanged: (String value){
             setState(() => phoneNumber= value);
           },
           decoration: InputDecoration(
-              hintText: "Phone Number",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.phone,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Phone Number",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.phone,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -151,18 +149,18 @@ class _PageRegisterState extends State<PageRegister>{
           },
           obscureText: true,
           decoration: InputDecoration(
-              hintText: "Password",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Password",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.lock_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -180,18 +178,18 @@ class _PageRegisterState extends State<PageRegister>{
           },
           obscureText: true,
           decoration: InputDecoration(
-              hintText: "Confirm Password",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Confirm Password",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.lock_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
@@ -217,9 +215,10 @@ class _PageRegisterState extends State<PageRegister>{
           child: Text(
             "Register",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             if (name != "" && email != "" && phoneNumber != "" && password != "" && confirmPassword != ""){

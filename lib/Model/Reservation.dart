@@ -48,8 +48,8 @@ class Reservation{
         }
       }
     }
-      return null;
-    }
+    return null;
+  }
 
   Future getExpiredReservation() async{
     final String userID = await User().getCurrentUser();

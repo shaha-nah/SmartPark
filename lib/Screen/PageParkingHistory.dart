@@ -9,7 +9,7 @@ class PageParkingHistory extends StatefulWidget {
 }
 
 class _PageParkingHistoryState extends State<PageParkingHistory> {
-final User _user = User();
+  final User _user = User();
 
   Widget widgetHistory(){
     return FutureBuilder<dynamic>(
@@ -34,19 +34,19 @@ final User _user = User();
               String paymentFee = snap.data[index]["reservationFee"].toString();
               String parkingSlot = snap.data[index]["parkingSlotID"];
               int status = snap.data[index]["reservationStatus"];
-              if (status == 4){
+              if (status == 5){
                 String checkInTime;
                 String checkOutTime;
                 var checkin = snap.data[index]["reservationCheckInTime"];
                 var checkout = snap.data[index]["reservationCheckOutTime"];
                 if (checkin == null){
-                  checkInTime = "boo";
+                  checkInTime = "";
                 }
                 else{
                   checkInTime = timeFormat.format(checkin.toDate());
                 }
                 if (checkout == null){
-                  checkOutTime = "boo";
+                  checkOutTime = "";
                 }
                 else{
                   checkOutTime = timeFormat.format(checkout.toDate());
@@ -67,31 +67,31 @@ final User _user = User();
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                      Row(
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 50,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Icon(
-                                            Icons.check_circle_outline,
-                                            color: Colors.green,
-                                            size: 50,
+                                          Text(
+                                            "Parking Completed",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w400
+                                            ),
                                           ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                "Parking Completed",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w400
-                                                ),
-                                              ),
-                                              Text(
-                                                date
-                                              ),
-                                            ],
+                                          Text(
+                                            date
                                           ),
                                         ],
                                       ),
                                     ],
+                                  ),
+                                ],
                               ),
                             ),
                             Column(
@@ -157,7 +157,7 @@ final User _user = User();
                   ),
                 );
               }
-              else if (status == 5){
+              else if (status == 6){
                 //expired
                 return Card(
                   margin: EdgeInsets.all(10),
@@ -175,31 +175,31 @@ final User _user = User();
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                      Row(
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.block,
+                                        color: Colors.red,
+                                        size: 50,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Icon(
-                                            Icons.block,
-                                            color: Colors.red,
-                                            size: 50,
+                                          Text(
+                                            "Reservation Expired",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w400
+                                            ),
                                           ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                "Reservation Expired",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w400
-                                                ),
-                                              ),
-                                              Text(
-                                                date
-                                              ),
-                                            ],
+                                          Text(
+                                            date
                                           ),
                                         ],
                                       ),
                                     ],
+                                  ),
+                                ],
                               ),
                             ),
                             Column(
@@ -258,7 +258,7 @@ final User _user = User();
                   ),
                 );
               }
-              else{
+              else if (status == 7){
                 //cancelled
                 return Card(
                   margin: EdgeInsets.all(10),
@@ -276,31 +276,31 @@ final User _user = User();
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                      Row(
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.cancel,
+                                        color: Colors.yellow[800],
+                                        size: 50,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Icon(
-                                            Icons.cancel,
-                                            color: Colors.red,
-                                            size: 50,
+                                          Text(
+                                            "Reservation Cancelled",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w400
+                                            ),
                                           ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                "Reservation Cancelled",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w400
-                                                ),
-                                              ),
-                                              Text(
-                                                date
-                                              ),
-                                            ],
+                                          Text(
+                                            date
                                           ),
                                         ],
                                       ),
                                     ],
+                                  ),
+                                ],
                               ),
                             ),
                             Column(
@@ -359,6 +359,7 @@ final User _user = User();
                   ),
                 );
               }
+              return Container();
             },
           );
         } 

@@ -60,9 +60,10 @@ class _PageGeneralSettingsState extends State<PageGeneralSettings> {
           child: Text(
             "Save",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             if (name == ""){
@@ -111,18 +112,18 @@ class _PageGeneralSettingsState extends State<PageGeneralSettings> {
                 setState(() => name = value);
               },
               decoration: InputDecoration(
-                  hintText: "Name",
-                  prefixIcon: Material(
-                    elevation: 0,
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    child: Icon(
-                      Icons.person_outline,
-                      color: hex("#8860d0"),
-                    ),
+                hintText: "Name",
+                prefixIcon: Material(
+                  elevation: 0,
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  child: Icon(
+                    Icons.person_outline,
+                    color: hex("#8860d0"),
                   ),
-                  border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                ),
+                border: InputBorder.none,
+                contentPadding:EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+              ),
             ),
           ),
         ),
@@ -145,23 +146,24 @@ class _PageGeneralSettingsState extends State<PageGeneralSettings> {
             elevation: 2.0,
             borderRadius: BorderRadius.all(Radius.circular(30)),
             child: TextFormField(
+              keyboardType: TextInputType.number,
               initialValue: widget.phoneNumber,
               onChanged: (String value){
                 setState(() => phoneNumber = value);
               },
               decoration: InputDecoration(
-                  hintText: "Phone Number",
-                  prefixIcon: Material(
-                    elevation: 0,
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    child: Icon(
-                      Icons.phone,
-                      color: hex("#8860d0"),
-                    ),
+                hintText: "Phone Number",
+                prefixIcon: Material(
+                  elevation: 0,
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  child: Icon(
+                    Icons.phone,
+                    color: hex("#8860d0"),
                   ),
-                  border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+              ),
             ),
           ),
         ),

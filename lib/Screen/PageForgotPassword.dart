@@ -5,7 +5,6 @@ import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Screen/PageLogin.dart';
 
 class PageForgotPassword extends StatefulWidget {
-  static String tag = 'forgotPassword-page';
   @override
   _PageForgotPasswordState createState() => new _PageForgotPasswordState();
 }
@@ -13,7 +12,7 @@ class PageForgotPassword extends StatefulWidget {
 class _PageForgotPasswordState extends State<PageForgotPassword> {
   String email = "";
 
-  void _dialogError(error){
+  void _dialogError(error) {
     Alert(
       context: context,
       type: AlertType.error,
@@ -24,10 +23,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
           color: Colors.red,
           child: Text(
             "Try Again",
-            style: TextStyle(
-              color: Colors.white, 
-              fontSize: 20
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () => Navigator.pop(context),
           width: 120,
@@ -36,7 +32,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
     ).show();
   }
 
-  void _dialogSuccess(message){
+  void _dialogSuccess(message) {
     Alert(
       context: context,
       type: AlertType.success,
@@ -47,10 +43,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
           color: Colors.green,
           child: Text(
             "OK",
-            style: TextStyle(
-              color: Colors.white, 
-              fontSize: 20
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () => Navigator.pushAndRemoveUntil(
             context,
@@ -63,14 +56,16 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
     ).show();
   }
 
-  Widget _lblEmail(){
+  Widget _lblEmail() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-      child: Text("Enter the email you use to sign in and we'll send you a link to reset your password."),
+      child: Text(
+        "Enter the email you use to sign in and we'll send you a link to reset your password."
+      ),
     );
   }
 
-  Widget _txtEmail(){
+  Widget _txtEmail() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       child: Material(
@@ -78,29 +73,29 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: TextField(
           keyboardType: TextInputType.emailAddress,
-          onChanged: (String value){
+          onChanged: (String value) {
             setState(() => email = value);
           },
           cursorColor: Colors.deepPurple,
           decoration: InputDecoration(
-              hintText: "Email",
-              prefixIcon: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: Icon(
-                  Icons.mail_outline,
-                  color: hex("#8860d0"),
-                ),
+            hintText: "Email",
+            prefixIcon: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              child: Icon(
+                Icons.mail_outline,
+                color: hex("#8860d0"),
               ),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+            ),
+            border: InputBorder.none,
+            contentPadding:EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+          ),
         ),
       ),
     );
   }
 
-  Widget _btnSendRequest(){
+  Widget _btnSendRequest() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       child: Container(
@@ -110,26 +105,23 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.1, 1.0],
-            colors: [
-              hex("#8860d0"),
-              hex("#5ab9ea")
-            ]
+            colors: [hex("#8860d0"), hex("#5ab9ea")]
           )
         ),
         child: FlatButton(
           child: Text(
             "Send Request",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 18
+            ),
           ),
-          onPressed: () async{
+          onPressed: () async {
             var result = await System().sendPasswordResetMail(email);
-            if (result){
+            if (result) {
               _dialogSuccess("A link has been sent to your email");
-            }
-            else{
+            } else {
               _dialogError("Email does not exist");
             }
           },
@@ -137,7 +129,6 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
       )
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -147,17 +138,15 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: Text("Forgot Password?", style: TextStyle(color: Colors.black),
+        title: Text(
+          "Forgot Password?",
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 5.0,
       ),
-      body:ListView(
-        children: <Widget>[
-          _lblEmail(),
-          _txtEmail(),
-          _btnSendRequest()
-        ], 
+      body: ListView(
+        children: <Widget>[_lblEmail(), _txtEmail(), _btnSendRequest()],
       )
     );
   }

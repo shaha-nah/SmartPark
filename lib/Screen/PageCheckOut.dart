@@ -54,50 +54,50 @@ class _PageCheckOutState extends State<PageCheckOut> {
       context: context,
       builder: (BuildContext context){
         return  AlertDialog(
-            content: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Divider(),Text("Thank You!",style: TextStyle(color: Colors.green),),
-                Text("Your transaction was successful"),
-                Divider(),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          content: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Divider(),Text("Thank You!",style: TextStyle(color: Colors.green),),
+              Text("Your transaction was successful"),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("DATE"),
+                  Text("FROM")
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(dateFormat.format(DateTime.now())),
+                  Text(timeFormat.format(DateTime.now())),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("DATE"),
-                      Text("FROM")
+                      Text("AMOUNT"),
+                      Text(price.toString()),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(dateFormat.format(DateTime.now())),
-                      Text(timeFormat.format(DateTime.now())),
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("AMOUNT"),
-                          Text(price.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text("OK"),
-                onPressed: () async {
-                  Navigator.push(context, RouteTransition(page: WidgetBottomNavigation()));
-                },
+                ],
               ),
             ],
-          );
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () async {
+                Navigator.push(context, RouteTransition(page: WidgetBottomNavigation()));
+              },
+            ),
+          ],
+        );
       }
     );
   }
@@ -232,8 +232,8 @@ class _PageCheckOutState extends State<PageCheckOut> {
       child: Container(
         width: 800,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(100)),
-            gradient: LinearGradient(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.1, 1.0],

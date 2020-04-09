@@ -110,7 +110,6 @@ class UserCard extends StatelessWidget {
     );
   }
 
-  //Styling
   static List<Color> color = [Color(0xff8860d0), Color(0xff5ab9ea)];
   final ParentStyle userCardStyle = ParentStyle()
     ..height(100)
@@ -140,7 +139,6 @@ class UserCard extends StatelessWidget {
 }
 
 class Settings extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -160,8 +158,7 @@ class Settings extends StatelessWidget {
             ),
           ),
         ),
-        SettingsItem( Icons.history, hex('#f172a1'), 'History', 'Your Transaction history'),
-
+        SettingsItem(Icons.history, hex('#f172a1'), 'History', 'Your Transaction history'),
         SettingsItem( Icons.attach_money, hex('#a1c3d1'), 'Wallet', 'Credit details'),
         Align(
           alignment: Alignment.centerLeft,

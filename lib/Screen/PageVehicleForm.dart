@@ -4,7 +4,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/User.dart';
 
 class PageVehicleForm extends StatefulWidget{
-
   @override
   _PageVehicleFormState createState() => new _PageVehicleFormState();
 }
@@ -29,8 +28,8 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
             ),
           ),
           onPressed: () => Navigator.pop(context, () {
-                initState();
-              }),
+            initState();
+          }),
           width: 120,
         )
       ],
@@ -68,8 +67,7 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
               ),
             ),
             border: InputBorder.none,
-            contentPadding:
-              EdgeInsets.symmetric(horizontal: 25, vertical: 13)
+            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
           ),
         ),
       ),
@@ -99,9 +97,10 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
           child: Text(
             "Save",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             if (!_btnDisabled){
@@ -121,8 +120,6 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
       )
     );
   }
-
-  
 
   @override
   Widget build(BuildContext context){

@@ -9,7 +9,6 @@ class PageWallet extends StatefulWidget {
 }
 
 class _PageWalletState extends State<PageWallet> {
-
   final User _user = User();
   var _amount="";
 
@@ -101,9 +100,10 @@ class _PageWalletState extends State<PageWallet> {
           child: Text(
             "Recharge",
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 18
+            ),
           ),
           onPressed: () async {
             if (_amount != ""){
