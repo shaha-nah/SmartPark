@@ -40,21 +40,39 @@ class System{
     }
   }
 
+  List shuffle(List items) {
+    var random = new Random();
+
+    // Go through all elements.
+    for (var i = items.length - 1; i > 0; i--) {
+
+      // Pick a pseudorandom number according to the list length
+      var n = random.nextInt(i + 1);
+
+      var temp = items[i];
+      items[i] = items[n];
+      items[n] = temp;
+    }
+
+    return items;
+  }
+
   Future<String> findParkingSlot(chosenDate, startTime, endTime) async{
     DateTime date = DateTime(chosenDate.year, chosenDate.month, chosenDate.day, 0, 0, 0);
     startTime = startTime.subtract(new Duration(hours: 1));
     endTime = endTime.add(new Duration(hours: 1));
 
-    var listParkingSlot = await ParkingLot().getListOfSlots();
-    var listFreeSlots = await ParkingLot().getListOfSlots();
+    List listParkingSlot = await ParkingLot().getListOfSlots();
+
+    listParkingSlot = shuffle(listParkingSlot);
 
     for (int i = 0; i<listParkingSlot.length; i++){
-      var reservations = await Firestore.instance.collection("reservation").where("parkingSlotID", isEqualTo: listParkingSlot[i]).where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 5).getDocuments();
+      QuerySnapshot reservations = await Firestore.instance.collection("reservation").where("parkingSlotID", isEqualTo: listParkingSlot[i]).where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 5).getDocuments();
       List<DocumentSnapshot> reservation = reservations.documents;
 
       if (reservation.length != 0){
         //reservation exists
-
+        bool free = true;
         List<dynamic> listStartTime = reservation.map((DocumentSnapshot snapshot){
           return snapshot.data["reservationStartTime"].toDate();
         }).toList();
@@ -66,18 +84,19 @@ class System{
         for (int j = 0; j<listStartTime.length; j++){
           
           if (!((startTime.isBefore(listStartTime[j]) && endTime.isBefore(listStartTime[j])) || ((startTime.isAfter(listEndTime[j])) && (endTime.isAfter(listEndTime[j]))))){
-            listFreeSlots.remove(listParkingSlot[i]);
+            free = false;
+            break;
           }
         }
+        if (free){
+          return listParkingSlot[i];
+        }
+      }
+      else{
+        return listParkingSlot[i];
       }
     }
-    if (listFreeSlots.length == 0){
-      return "none";
-    }
-    else{
-      var index= 0 + Random().nextInt(listFreeSlots.length-1 - 0);
-      return listFreeSlots[index];
-    }
+    return "none";
   }
 
   Stream getReservations(chosenDate){

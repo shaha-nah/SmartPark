@@ -59,7 +59,6 @@ class User {
       // return _userFromFirebaseUser(user);
       return null;
     } catch (e) {
-      print(e.toString());
       if (e.toString() ==
           "PlatformException(error, Given String is empty or null, null)") {
         return "Please fill in all the fields";
@@ -87,7 +86,6 @@ class User {
 
       return user;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -99,7 +97,6 @@ class User {
             context, MaterialPageRoute(builder: (context) => Wrapper()));
       });
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -108,11 +105,8 @@ class User {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     bool change = true;
     await user.updatePassword(password).then((_) {
-      print("Password changed");
       change = true;
     }).catchError((error) {
-      print("error" + error.toString());
-      print("1");
       change = false;
     });
     return change;
@@ -121,9 +115,7 @@ class User {
   Future<void> deleteAccount() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     user.delete().then((_){
-      print("User deleted");
     }).catchError((error) {
-      print("User can't be deleted: " + error.toString());
     });
     return null;
   }
@@ -140,9 +132,11 @@ class User {
   }
 
   Future addVehicle(String vehiclePlateNumber) async {
+    vehiclePlateNumber = vehiclePlateNumber.toUpperCase();
+    vehiclePlateNumber = vehiclePlateNumber.replaceAll(' ', '');
+    
     String userID = await getCurrentUser();
     List<dynamic> vehicles = await Vehicle().getVehiclePlateNumbers();
-    print(vehicles);
     if (vehicles.contains(vehiclePlateNumber)){
       return false;
     }
@@ -253,7 +247,6 @@ class User {
           await _reservation.setReservationExpired();
         }
         else if (type == "cancelled"){
-          print("boo");
           await cancelReservation();
         }
         else{

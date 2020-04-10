@@ -63,7 +63,6 @@ class Reservation{
   }
 
   Future setReservationExpired() async{
-    print("reservation expired");
     final reservation = await getExpiredReservation();
     final String reservationID = reservation.documentID;
     return await Firestore.instance.collection("reservation").document(reservationID).updateData({

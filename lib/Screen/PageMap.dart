@@ -83,14 +83,13 @@ class _PageMap extends State<PageMap> {
         _controller.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
             bearing: 192.8334901395799,
             target: LatLng(location.latitude, location.longitude),
-            tilt: 0,
+            tilt: 20,
             zoom: 18.00)));
         updateMarkerAndCircle(currentLocation, destination, imageData);
       }
 
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
-        debugPrint("Permission Denied");
       }
     }
   }
@@ -133,6 +132,19 @@ class _PageMap extends State<PageMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: new AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        title: Text(
+          "Location",
+          style: TextStyle(
+            color: Colors.black
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 5.0,
+      ),
       body: Stack(
         children: <Widget>[
           map(),

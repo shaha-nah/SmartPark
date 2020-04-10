@@ -587,6 +587,11 @@ class _PageReservationState extends State<PageReservation> {
 
   @override
   Widget build(BuildContext context) {
+    final contentStyle = (BuildContext context) => ParentStyle()
+      ..overflow.scrollable()
+      ..padding(vertical: 30, horizontal: 20)
+      ..minHeight(MediaQuery.of(context).size.height - (2 * 30));
+
     return Scaffold(
       appBar: new AppBar(
         iconTheme: IconThemeData(
@@ -606,7 +611,10 @@ class _PageReservationState extends State<PageReservation> {
         header:WaterDropHeader(),
         controller: _refreshController,
         onRefresh: _onRefresh,
-        child: _reservationDetails(),
+        child: Parent(
+          style: contentStyle(context),
+          child: _reservationDetails(),
+        ),
       ),
       floatingActionButton: _btnLotLocation(),
     );

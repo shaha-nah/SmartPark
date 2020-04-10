@@ -125,7 +125,6 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
               _dtDate = DateTime(
                   chosenDate.year, chosenDate.month, chosenDate.day, 0, 0, 0);
               _date = dateFormat.format(_dtDate);
-              print(_dtDate);
             });
           }, currentTime: DateTime.now(), locale: LocaleType.en);
         },

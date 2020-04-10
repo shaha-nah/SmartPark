@@ -43,7 +43,7 @@ class _PageLoginState extends State<PageLogin>{
             "Try Again",
             style: TextStyle(
               color: Colors.white, 
-              fontSize: 20
+              fontSize: 18
             ),
           ),
           onPressed: () => Navigator.pop(context),

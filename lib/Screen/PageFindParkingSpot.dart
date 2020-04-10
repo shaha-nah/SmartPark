@@ -1,5 +1,6 @@
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/ParkingLot.dart';
 import 'package:smartpark/Model/System.dart';
@@ -163,67 +164,113 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
     );
   }
 
+  Widget _addVehicle(){
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, RouteTransition(page: PageVehicleForm()));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 12),
+        height: 80,
+        width: 80,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          // border: Border.all(
+          //   color: hex("#84ceeb"),
+          //   width: 2
+          // )
+        ),
+        child: Icon(
+          Icons.add,
+          color: hex("#5680e9"),
+        )
+      ),
+    );
+  }
+
   Widget _chkboxVehicle(){
-    return FutureBuilder<dynamic>(
-      future: _vehicle.getVehiclePlateNumbers(),
+    final providerUser = Provider.of<User>(context);
+    return StreamBuilder<dynamic>(
+      stream: _vehicle.getVehicles(providerUser.uid),
       builder: (context, snap){
-        if (snap.connectionState == ConnectionState.done){
-          if (snap.data.length == 0){
-            return GestureDetector(
-              onTap: (){
-                Navigator.push(context, RouteTransition(page: PageVehicleForm()));
-              },
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 12),
-                height: 80,
-                width: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.0),
-                  border: Border.all(
-                    color: hex("#84ceeb"),
-                    width: 2
-                  )
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: hex("#5680e9"),
-                )
-              ),
-            );
+        if (snap.hasData){
+          if (snap.data.documents.length == 0){
+            _addVehicle();
           }
           return ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: snap.data.length,
+            itemCount: snap.data.documents.length,
             itemBuilder: (context, index){
-              return GestureDetector(
-                onTap: () => setState(() => _chosenVehicle=snap.data[index]),
-                child: Container(
-                  width: 100,
-                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  decoration: _chosenVehicle == snap.data[index] ?  BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    border: Border.all(
-                      color: hex("#84ceeb"),
-                      width: 2
-                    )
-                  ) : BoxDecoration(
-                    border: Border.all(color: Colors.white)
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.directions_car,
-                        color: hex("#5680e9"),
+              if (index == 0){
+                _chosenVehicle = snap.data.documents[index]["vehiclePlateNumber"];
+              }
+              if (index == snap.data.documents.length -1){
+                return Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => setState(() => _chosenVehicle=snap.data.documents[index]["vehiclePlateNumber"]),
+                      child: Container(
+                        width: 100,
+                        margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                        decoration: _chosenVehicle == snap.data.documents[index]["vehiclePlateNumber"] ?  BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.0),
+                          border: Border.all(
+                            color: hex("#84ceeb"),
+                            width: 2
+                          )
+                        ) : BoxDecoration(
+                          border: Border.all(color: Colors.white)
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.directions_car,
+                              color: hex("#5680e9"),
+                            ),
+                            Text(
+                              snap.data.documents[index]["vehiclePlateNumber"]
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        snap.data[index]
-                      ),
-                    ],
+                    ),
+                    _addVehicle(),
+                  ],
+                );
+              }
+              else{
+                return GestureDetector(
+                  onTap: () => setState(() => _chosenVehicle=snap.data.documents[index]["vehiclePlateNumber"]),
+                  child: Container(
+                    width: 100,
+                    margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    decoration: _chosenVehicle == snap.data.documents[index]["vehiclePlateNumber"] ?  BoxDecoration(
+                      borderRadius: BorderRadius.circular(25.0),
+                      border: Border.all(
+                        color: hex("#84ceeb"),
+                        width: 2
+                      )
+                    ) : BoxDecoration(
+                      border: Border.all(color: Colors.white)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.directions_car,
+                          color: hex("#5680e9"),
+                        ),
+                        Text(
+                          snap.data.documents[index]["vehiclePlateNumber"]
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             },
           );
         }
@@ -253,7 +300,6 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
               _tempDate = chosenDate;
               _dtDate = DateTime(chosenDate.year, chosenDate.month, chosenDate.day, 0, 0, 0);
               _date = dateFormat.format(_dtDate);
-              print(_dtDate);
             });
           }, 
           currentTime: DateTime.now(), locale: LocaleType.en);
@@ -475,7 +521,6 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
                         _dialogConfirmReservation();
                       }
                       else{
-                        print(_dtEndTime.difference(_dtStartTime).inMinutes);
                         _dialogError("Please make a reservation of at least half an hour", 1);
                       }
                     }
