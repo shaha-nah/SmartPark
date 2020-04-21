@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:smartpark/Model/User.dart';
 
 class PageMap extends StatefulWidget {
   PageMap({Key key, this.title}) : super(key: key);
@@ -67,7 +68,7 @@ class _PageMap extends State<PageMap> {
     try {
       Uint8List imageData = await getMarker();
       var currentLocation = await _locationTracker.getLocation();
-      var destination = LatLng(-20.2338, 57.4985);
+      var destination = await User().obtainDirections();
       var location;
       updateMarkerAndCircle(currentLocation, destination, imageData);
 

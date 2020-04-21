@@ -338,7 +338,7 @@ class _SettingsItemState extends State<SettingsItem> {
                   return _dialogPasswordError(type);
                 }
                 else{
-                  var result = await _system.validateCurrentPassword(_password, context);
+                  var result = await _system.validateCurrentPassword(_password);
                   if (result){
                     if (type == "password"){
                       Navigator.push(context, RouteTransition(page: PageChangePassword()));

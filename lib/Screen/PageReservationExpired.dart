@@ -2,7 +2,6 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:smartpark/Model/Reservation.dart';
 import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Model/User.dart';
 import 'package:smartpark/RouteTransition.dart';
@@ -15,7 +14,6 @@ class PageReservationExpired extends StatefulWidget {
 
 class _PageReservationExpiredState extends State<PageReservationExpired> {
   final User _user = User();
-  final Reservation _reservation = Reservation();
   final System _system = System();
 
   DateFormat dateFormat = DateFormat("MMM d, yyyy");
@@ -146,7 +144,7 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
       context: context,
       builder: (BuildContext context){
         return FutureBuilder<dynamic>(
-          future: _reservation.getExpiredReservation(),
+          future: _system.getExpiredReservation(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
             if (snapshot.connectionState == ConnectionState.done){
               return  AlertDialog(

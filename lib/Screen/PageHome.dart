@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smartpark/Model/Reservation.dart';
+import 'package:smartpark/Model/System.dart';
 import 'package:smartpark/Screen/PageCheckOut.dart';
 import 'package:smartpark/Screen/PageReservationExpired.dart';
 import 'package:smartpark/Screen/PageSlotReallocation.dart';
@@ -14,12 +14,12 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome>{
-  final Reservation _reservation = Reservation();
+  final System _system = System();
   
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<dynamic>(
-      future: _reservation.hasReservation(),
+      future: _system.hasReservation(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if (snapshot.connectionState == ConnectionState.done){
           if (snapshot.data == null){

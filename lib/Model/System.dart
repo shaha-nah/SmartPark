@@ -11,6 +11,11 @@ class System{
     return user.isEmailVerified;
   }
 
+  Future<void> resendEmailVerification() async{
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    user.sendEmailVerification();
+  }
+
   Future<bool> sendPasswordResetMail(String email) async {
     var emails = await Firestore.instance.collection("user").where("userEmail", isEqualTo: email).getDocuments();
     List<DocumentSnapshot> emailDocuments = emails.documents;
@@ -23,12 +28,7 @@ class System{
     }
   }
 
-  Future resendEmailVerification() async{
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    user.sendEmailVerification();
-  }
-
-  Future validateCurrentPassword(password, context) async{
+  Future<bool> validateCurrentPassword(password) async{
     var userDetails = await User().getUserDetails();
     var email = userDetails["userEmail"];
     var result = await User().signIn(email, password);
@@ -104,7 +104,7 @@ class System{
     return Firestore.instance.collection("reservation").where("reservationDate", isEqualTo: date).where("reservationStatus", isLessThan: 5).snapshots();
   }
 
-  Future findAllAvailableSlots(reservations, startTime, endTime) async{
+  Future<List<dynamic>> findAllAvailableSlots(reservations, startTime, endTime) async{
 
     startTime = startTime.subtract(new Duration(hours: 1));
     endTime = endTime.add(new Duration(hours: 1));
@@ -174,7 +174,7 @@ class System{
     return free;
   }
 
-  Future setReservationOngoing() async{
+  Future<void> setReservationOngoing() async{
     final String reservationID = await User().getCurrentReservation();
     return await Firestore.instance.collection("reservation").document(reservationID).updateData({
       "reservationStatus": 2
@@ -214,7 +214,7 @@ class System{
     }
   }
 
-  Future reallocate(slot) async{
+  Future<void> reallocate(slot) async{
     String reservationID = await User().getCurrentReservation();
     DocumentSnapshot reservation = await User().getReservationDetails();
     int fee = await calculateFee("B", reservation["reservationStartTime"].toDate(), reservation["reservationEndTime"].toDate(), reservation["reservationEndTime"].toDate(), "normal");
@@ -224,6 +224,59 @@ class System{
       "parkingSlotID": slot,
       "reservationFee": fee,
       "reservationSlotReallocation": ""
+    });
+  }
+
+  Future hasReservation() async{
+    var userID = await User().getCurrentUser();
+    var allReservation = await Firestore.instance.collection("reservation").getDocuments();
+    List<DocumentSnapshot> allReservations = allReservation.documents;
+    if (allReservations.length != 0){
+      //reservations exist
+      var userReservation = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
+      List<DocumentSnapshot> userReservations = userReservation.documents;
+      for (int i = 0; i<userReservations.length; i++){
+        if ((userReservations[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (userReservations[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
+          return "expired";
+        }
+        else if (userReservations[i].data["reservationStatus"] == 1){
+          return "confirmed";
+        }
+        else if (userReservations[i].data["reservationStatus"] == 2){
+          return "ongoing";
+        }
+        else if (userReservations[i].data["reservationStatus"] == 3){
+          if (userReservations[i].data["reservationSlotReallocation"] != ""){
+            return "reallocation";
+          }
+          else{
+            return "checkedin";
+          }
+        }
+        else if (userReservations[i].data["reservationStatus"] == 4){
+          return "checkingout";
+        }
+      }
+    }
+    return null;
+  }
+
+  Future getExpiredReservation() async{
+    final String userID = await User().getCurrentUser();
+    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
+    List<DocumentSnapshot> reservation = reservations.documents;
+    for (int i = 0; i < reservation.length; i++){
+      if ((reservation[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (reservation[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
+        return reservation[i];
+      }
+    }
+  }
+
+  Future<void> setReservationExpired() async{
+    final reservation = await getExpiredReservation();
+    final String reservationID = reservation.documentID;
+    return await Firestore.instance.collection("reservation").document(reservationID).updateData({
+      "reservationStatus": 6
     });
   }
 }

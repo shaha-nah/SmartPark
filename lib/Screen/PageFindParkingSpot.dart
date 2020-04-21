@@ -195,7 +195,28 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
       builder: (context, snap){
         if (snap.hasData){
           if (snap.data.documents.length == 0){
-            _addVehicle();
+            print("oo");
+            return GestureDetector(
+              onTap: (){
+                Navigator.push(context, RouteTransition(page: PageVehicleForm()));
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 12),
+                height: 80,
+                width: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.0),
+                  border: Border.all(
+                    color: hex("#84ceeb"),
+                    width: 2
+                  )
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: hex("#5680e9"),
+                )
+              ),
+            );
           }
           return ListView.builder(
             scrollDirection: Axis.horizontal,
