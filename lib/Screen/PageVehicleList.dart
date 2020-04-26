@@ -74,10 +74,10 @@ class _PageVehicleListState extends State<PageVehicleList> {
               DocumentSnapshot vehicleDocument  =snapshot.data.documents[index];
               return WidgetVehicleItem(
                 vehiclePlateNumber: vehicleDocument.data["vehiclePlateNumber"],
+                vehicleType: vehicleDocument.data["type"],
                 onDelete: (vehicle) async{
                   _dialogConfirmDelete(vehicle);
                 },
-                onEdit: (vehicle){},
               );
             },
           );

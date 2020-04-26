@@ -8,7 +8,6 @@ import 'package:smartpark/Screen/PageGeneralSettings.dart';
 import 'package:smartpark/Screen/PageLogin.dart';
 import 'package:smartpark/Screen/PageParkingHistory.dart';
 import 'package:division/division.dart';
-import 'package:smartpark/Screen/PageWallet.dart';
 
 class PageProfile extends StatefulWidget {
   @override
@@ -159,7 +158,7 @@ class Settings extends StatelessWidget {
           ),
         ),
         SettingsItem(Icons.history, hex('#f172a1'), 'History', 'Your Transaction history'),
-        SettingsItem( Icons.attach_money, hex('#a1c3d1'), 'Wallet', 'Credit details'),
+        // SettingsItem( Icons.attach_money, hex('#a1c3d1'), 'Wallet', 'Credit details'),
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
@@ -379,9 +378,9 @@ class _SettingsItemState extends State<SettingsItem> {
             var userDetails = await _user.getUserDetails();
             Navigator.push(context, RouteTransition(page: PageGeneralSettings(name: userDetails.data["userName"], phoneNumber: userDetails.data["userPhoneNumber"],)));
           }
-          else if (selected == "Wallet"){
-            Navigator.push(context, RouteTransition(page: PageWallet()));
-          }
+          // else if (selected == "Wallet"){
+          //   Navigator.push(context, RouteTransition(page: PageWallet()));
+          // }
           else if(selected == "Account Settings"){
             _dialogPassword("password");
           }

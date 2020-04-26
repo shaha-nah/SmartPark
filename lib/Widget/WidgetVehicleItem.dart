@@ -4,9 +4,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class WidgetVehicleItem extends StatelessWidget{
   final String vehiclePlateNumber;
+  final String vehicleType;
   final Function(String) onEdit;
   final Function(String) onDelete;
-  const WidgetVehicleItem({Key key, @required this.vehiclePlateNumber, @required this.onEdit, @required this.onDelete}) : super(key: key);
+  const WidgetVehicleItem({Key key, @required this.vehiclePlateNumber, @required this.vehicleType, this.onEdit, @required this.onDelete}) : super(key: key);
 
   @override 
   Widget build(BuildContext context){
@@ -29,8 +30,11 @@ class WidgetVehicleItem extends StatelessWidget{
           margin: EdgeInsets.all(8.0),
           color: Colors.white,
             child: ListTile(
-              leading: Icon(
+              leading: vehicleType=="4-Wheeler" ? Icon(
                 Icons.directions_car,
+                color: hex("#5680e9"),
+              ): Icon(
+                Icons.motorcycle,
                 color: hex("#5680e9"),
               ),
               title: Text(

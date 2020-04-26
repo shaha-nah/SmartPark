@@ -10,6 +10,7 @@ class PageVehicleForm extends StatefulWidget{
 
 class _PageVehicleFormState extends State<PageVehicleForm>{ 
   String vehicleLicensePlateNumber = "";
+  String _vehicleType = "4-Wheeler";
 
   void _dialogError(){
     Alert(
@@ -40,8 +41,68 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       child: Text(
-        "Enter your license plate number",
+        "Enter the details of your vehicle",
       ),
+    );
+  }
+
+  Widget _chkbxVehicle(){
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () => setState(() => _vehicleType = "4-Wheeler"),
+          child: Container(
+            width: 100,
+            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: _vehicleType == "4-Wheeler" ? BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              border: Border.all(
+                color: hex("#84ceeb"),
+                width: 2
+              )
+            ) : BoxDecoration(
+              border: Border.all(color: Colors.white)
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.directions_car,
+                  color: hex("#5680e9")
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () => setState(() => _vehicleType = "2-Wheeler"),
+          child: Container(
+            width: 100,
+            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: _vehicleType == "2-Wheeler" ? BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              border: Border.all(
+                color: hex("#84ceeb"),
+                width: 2
+              )
+            ) : BoxDecoration(
+              border: Border.all(color: Colors.white)
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.motorcycle,
+                  color: hex("#5680e9")
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -62,7 +123,7 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
               elevation: 0,
               borderRadius: BorderRadius.all(Radius.circular(30)),
               child: Icon(
-                Icons.directions_car,
+                Icons.text_fields,
                 color: hex("#8860d0")
               ),
             ),
@@ -107,7 +168,7 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
               setState(() {
                 _btnDisabled = !_btnDisabled;
               });
-              var result = await User().addVehicle(vehicleLicensePlateNumber);
+              var result = await User().addVehicle(vehicleLicensePlateNumber, _vehicleType);
               if (result){
                 Navigator.of(context).pop();
               }
@@ -136,6 +197,13 @@ class _PageVehicleFormState extends State<PageVehicleForm>{
       body: ListView(
         children: <Widget>[
           _lblTitle(),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              height: 120,
+              child: _chkbxVehicle()
+            ),
+          ),
           _txtLicensePlateNumber(),
           _btnSave(),
         ],

@@ -44,6 +44,30 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
     ).show();
   }
 
+  void _dialogChangeSlot(slot){
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "OH NO!",
+      desc: "This slot will not be available! Please move to " + slot,
+      buttons: [
+        DialogButton(
+          color: Colors.orange,
+          child: Text(
+            "I understand",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () async{
+            await _user.modifyReservation(_dtEndTime, slot);
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          width: 120,
+        ),
+      ]
+    ).show();
+  }
+
   Widget _lblStartTime() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
@@ -77,7 +101,7 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
               _dialogError("End time cannot be before start time");
             } else {
               setState(() {
-                _endTime = '${endtime.hour}: ${endtime.minute}';
+                _endTime = timeFormat.format(endtime);
                 _dtEndTime = endtime;
               });
             }
@@ -139,7 +163,7 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
                   colors: [hex("#8860d0"), hex("#5ab9ea")])),
           child: FlatButton(
             child: Text(
-              "Extend",
+              "Modify",
               style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -157,11 +181,21 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
                                 .difference(widget.originalStartTime)
                                 .inMinutes >
                             29) {
-                          _user.extendReservation(_dtEndTime);
-                          Navigator.of(context).pop();
+                          String extend = await _user.modifyReservation(_dtEndTime, "normal");
+                          print("extend: " + extend);
+                          if (extend == ""){
+                            Navigator.of(context).pop();
+                          }
+                          else{
+                            if (extend == "None"){
+                              _dialogError("No slots are available!");
+                            }
+                            else{
+                              _dialogChangeSlot(extend);
+                            }
+                          }
                         } else {
-                          _dialogError(
-                              "A reservation of less than half an hour cannot be made");
+                          _dialogError("A reservation of less than half an hour cannot be made");
                         }
                       } else {
                         _dialogError("Please choose a time in the future");
@@ -191,7 +225,7 @@ class _PageExtendReservationState extends State<PageExtendReservation> {
           color: Colors.black,
         ),
         title: Text(
-          "Extend reservation",
+          "Modify reservation",
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,

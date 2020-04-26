@@ -7,8 +7,8 @@ class ParkingLot{
     return result.data["parkingLotID"];
   }
 
-  Future<List<String>> reservationParkingSlot() async{
-    QuerySnapshot result = await Firestore.instance.collection("parkingLot").where("reserve", isEqualTo: true).getDocuments();
+  Future<List<String>> reservationParkingSlot(vehicleType) async{
+    QuerySnapshot result = await Firestore.instance.collection("parkingLot").where("type", isEqualTo: vehicleType).getDocuments();
     List<DocumentSnapshot> parkingDocs = result.documents;
     List<String> listParkingSlots = parkingDocs.map((DocumentSnapshot snapshot){
       return snapshot.documentID;
@@ -16,8 +16,8 @@ class ParkingLot{
     return listParkingSlots;
   }
 
-  Future<List<String>> getListOfSlots() async{
-    List<String> reserveLots = await reservationParkingSlot();
+  Future<List<String>> getListOfSlots(vehicleType) async{
+    List<String> reserveLots = await reservationParkingSlot(vehicleType);
     QuerySnapshot querySnapshotParkingSlots = await Firestore.instance.collection("parkingSlot").where("parkingLotID", whereIn: reserveLots).getDocuments();
     List<DocumentSnapshot> documentParkingSlots = querySnapshotParkingSlots.documents;
     List<String> listParkingSlot = documentParkingSlots.map((DocumentSnapshot snapshot){

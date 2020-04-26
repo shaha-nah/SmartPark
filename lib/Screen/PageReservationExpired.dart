@@ -139,7 +139,7 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
     );
   }
 
-  void _dialogMakePayment(fee){
+  void _dialogMakePayment(){
     showDialog(
       context: context,
       builder: (BuildContext context){
@@ -206,13 +206,13 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "AMOUNT",
+                              "Expiration Fee",
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black54,
                               ),
                             ),
-                            Text("Rs" + fee.toString()),
+                            Text("Rs" + (snapshot.data["reservationPenaltyFee"]).toString()),
                           ],
                         ),
                       ],
@@ -236,9 +236,9 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
                     child: new Text("OK"),
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      var result = await _user.makePayment(fee, "expired");
+                      var result = await _user.makePayment(snapshot.data["reservationPenaltyFee"], "expired");
                       if (result){
-                        _dialogPaymentSuccessful(fee);
+                        _dialogPaymentSuccessful(snapshot.data["reservationPenaltyFee"]);
                       }
                       else{
                         _dialogPaymentFailed();
@@ -285,8 +285,8 @@ class _PageReservationExpiredState extends State<PageReservationExpired> {
           ),
           onPressed: () async {
             var reservation = await _user.getReservationDetails();
-            var fee = await _system.calculateFee(reservation["parkingLotID"], reservation["reservationStartTime"].toDate(), reservation["reservationEndTime"].toDate(), reservation["reservationEndTime"].toDate(), "expired");
-            _dialogMakePayment(fee);
+            await _system.calculateFee(reservation["parkingLotID"], reservation["reservationStartTime"].toDate(), reservation["reservationEndTime"].toDate(), reservation["reservationEndTime"].toDate(), "expired");
+            _dialogMakePayment();
           },
         ),
       )

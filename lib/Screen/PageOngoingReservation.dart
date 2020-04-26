@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smartpark/Model/User.dart';
+import 'package:smartpark/Model/Vehicle.dart';
 import 'package:smartpark/RouteTransition.dart';
 import 'package:smartpark/Screen/PageExtendReservation.dart';
 import 'package:smartpark/Screen/PageSlotDirection.dart';
@@ -51,9 +52,27 @@ class _PageOngoingReservationState extends State<PageOngoingReservation> {
                 _countdownTo(snapshot.data["reservationEndTime"].toDate()),
                 Card(
                   child: ListTile(
-                    leading: Icon(
-                      Icons.directions_car,
-                      color: hex("#5680e9")
+                    leading: FutureBuilder<String>(
+                      future: Vehicle().getVehicleType(snapshot.data["vehicleID"]),
+                      builder: (BuildContext context, AsyncSnapshot snapshot){
+                        if (snapshot.connectionState == ConnectionState.done){
+                          if (snapshot.data == "2-Wheeler"){
+                            return Icon(
+                              Icons.motorcycle,
+                              color: hex("#5680e9"),
+                            );
+                          }
+                          else{
+                            return Icon(
+                              Icons.directions_car,
+                              color: hex("#5680e9"),
+                            );
+                          }
+                        }
+                        return Icon(
+                          Icons.autorenew
+                        );
+                      },
                     ),
                     title: Text(snapshot.data["vehicleID"]),
                   ),

@@ -11,8 +11,9 @@ class PageChangeReservation extends StatefulWidget {
   final String date;
   final String startTime;
   final String endTime;
+  final String vehicle;
 
-  PageChangeReservation({Key key, @required this.date, @required this.startTime, @required this.endTime}):super(key: key);
+  PageChangeReservation({Key key, @required this.date, @required this.startTime, @required this.endTime, @required this.vehicle}):super(key: key);
 
   @override
   _PageChangeReservationState createState() => _PageChangeReservationState();
@@ -26,6 +27,8 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
   DateTime _tempDate;
   DateTime _dtStartTime;
   DateTime _dtEndTime;
+
+  DateFormat timeFormat = DateFormat("HH: mm");
 
   void _dialogError(error) {
     Alert(
@@ -86,7 +89,7 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
                   style: TextStyle(color: hex("#5680e9")),
                 ),
                 onPressed: () async {
-                  User().changeReservation(_dtDate, _dtStartTime, _dtEndTime);
+                  User().changeReservation(_dtDate, _dtStartTime, _dtEndTime, widget.vehicle);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
@@ -182,7 +185,7 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
               ),
               showTitleActions: true, onConfirm: (starttime) {
             setState(() {
-              _startTime = '${starttime.hour}: ${starttime.minute}';
+              _startTime = timeFormat.format(starttime);
               _dtStartTime = starttime;
             });
           }, currentTime: _tempDate, locale: LocaleType.en);
@@ -247,7 +250,7 @@ class _PageChangeReservationState extends State<PageChangeReservation> {
               _dialogError("End time cannot be before start time");
             } else {
               setState(() {
-                _endTime = '${endtime.hour}: ${endtime.minute}';
+                _endTime = timeFormat.format(endtime);
                 _dtEndTime = endtime;
               });
             }

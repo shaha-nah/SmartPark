@@ -33,12 +33,12 @@ class User {
     return FirebaseAuth.instance.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
-  Future<void> updateUserData(String userName, String userEmail, String userPhoneNumber, int userCredit)async {
+  Future<void> updateUserData(String name, String email, String phoneNumber)async {
     return await Firestore.instance.collection("user").document(uid).setData({
-      'userName': userName,
-      'userEmail': userEmail,
-      'userPhoneNumber': userPhoneNumber,
-      'userCredit': userCredit,
+      'userName': name,
+      'userEmail': email,
+      'userPhoneNumber': phoneNumber,
+      'userCredit': 0,
       'userRole': "normal"
     });
   }
@@ -51,7 +51,7 @@ class User {
 
       //create a new document for the user with the uid
       await User(uid: user.uid)
-          .updateUserData(name, email, phoneNumber, 1000)
+          .updateUserData(name, email, phoneNumber)
           .then((_) {
           user.sendEmailVerification();
         Navigator.push(context, RouteTransition(page: Wrapper()));
@@ -131,7 +131,7 @@ class User {
     yield* Firestore.instance.collection("user").document(uid).snapshots();
   }
 
-  Future<bool> addVehicle(String vehiclePlateNumber) async {
+  Future<bool> addVehicle(String vehiclePlateNumber, String vehicleType) async {
     vehiclePlateNumber = vehiclePlateNumber.toUpperCase();
     vehiclePlateNumber = vehiclePlateNumber.replaceAll(' ', '');
     
@@ -144,7 +144,8 @@ class User {
       await Firestore.instance.collection("vehicle").document().setData({
         'vehiclePlateNumber': vehiclePlateNumber,
         'userID': userID,
-        'markAsDeleted': false
+        'markAsDeleted': false,
+        'type': vehicleType
       });
       return true;
     }
@@ -153,8 +154,6 @@ class User {
   Future<bool> makeReservation(DateTime date, DateTime startTime, DateTime endTime, String parkingLot, String parkingSlot, String vehiclePlateNumber) async{
     var userID = await getCurrentUser();
   
-    var fee = await System().calculateFee(parkingLot, startTime, endTime, endTime, "normal");
-
     var result = await System().checkSlotAvailability(date, startTime, endTime, parkingSlot);
     
     if (result){
@@ -162,14 +161,17 @@ class User {
         "parkingLotID": parkingLot,
         "parkingSlotID": parkingSlot,
         "reservationDate": date,
+        "reservationDiscount": false,
         "reservationEndTime": endTime,
-        "reservationFee": fee,
         "reservationStartTime": startTime,
         "reservationStatus": 1,
-        "reservationSlotReallocation": "",
+        "reservationSlotReallocation": false,
+        "reservationPenalty": false,
+        "reservationPenaltyFee": 0,
         "userID": userID,
         "vehicleID": vehiclePlateNumber
       });
+      await System().calculateFee(parkingLot, startTime, endTime, endTime, "normal");
       return true;
     }
     else{
@@ -225,15 +227,9 @@ class User {
   }
 
   Future<void> checkOut() async{
-    var currentReservationID = await getCurrentReservation();
     var currentReservation = await getReservationDetails();
-    var fee;
     
-    fee = await System().calculateFee(currentReservation["parkingLotID"], currentReservation["reservationStartTime"].toDate(), currentReservation["reservationEndTime"].toDate(), currentReservation["reservationCheckOutTime"].toDate(), "checkout");
-    
-    await Firestore.instance.collection("reservation").document(currentReservationID).updateData({
-      "reservationFee": fee
-    });
+    await System().calculateFee(currentReservation["parkingLotID"], currentReservation["reservationStartTime"].toDate(), currentReservation["reservationEndTime"].toDate(), currentReservation["reservationCheckOutTime"].toDate(), "checkout");
   }
 
   Future<bool> makePayment(price, type) async{
@@ -246,7 +242,7 @@ class User {
     }
     else{
       await Firestore.instance.collection("user").document(userID).updateData({
-        "userCredit": FieldValue.increment(-price)
+        "userCredit": FieldValue.increment(-price),
       }).then((value)async {
         if (type == "expired"){
           await System().setReservationExpired();
@@ -256,7 +252,6 @@ class User {
         }
         else{
           await Firestore.instance.collection("reservation").document(reservationID).updateData({
-            "reservationPayment": "Completed",
             "reservationStatus": FieldValue.increment(1)
           });
         }
@@ -292,95 +287,64 @@ class User {
     });
   }
 
-  Future<void> changeReservation(date, startTime, endTime) async{
-    String parkingSlot = await  System().findParkingSlot(date, startTime, endTime);
+  Future<void> changeReservation(date, startTime, endTime, vehicle) async{
+    String vehicleType = await Vehicle().getVehicleType(vehicle);
+    String parkingSlot = await  System().findParkingSlot(date, startTime, endTime, vehicleType);
     String parkingLot = await ParkingLot().getParkingLot(parkingSlot);
 
     String reservation = await getCurrentReservation();
 
-    var fee = await System().calculateFee(parkingLot, startTime, endTime, endTime, "normal");
-
-    return await Firestore.instance.collection("reservation").document(reservation).updateData({
+    await Firestore.instance.collection("reservation").document(reservation).updateData({
       "reservationDate": date,
       "reservationStartTime": startTime,
       "reservationEndTime": endTime,
       "parkingLotID": parkingLot,
       "parkingSlotID": parkingSlot,
       "reservationStatus": 1,
-      "reservationFee": fee,
       "reservationPenalty": false
     });
+
+    await System().calculateFee(parkingLot, startTime, endTime, endTime, "normal");
   }
 
-  Future<void> extendReservation(endTime) async{
+  Future<String> modifyReservation(endTime, type) async{
     String reservationID = await getCurrentReservation();
     DocumentSnapshot reservation = await getReservationDetails();
+    if (type == "normal"){
+      String extend = await System().canModifyReservation(endTime);
+      if (extend == ""){
+        await Firestore.instance.collection("reservation").document(reservationID).updateData({
+          "reservationEndTime": endTime,
+        });
 
-    var fee = await System().calculateFee(reservation["parkingLotID"], reservation["reservationStartTime"].toDate(), endTime, endTime, "normal");
-
-    return await Firestore.instance.collection("reservation").document(reservationID).updateData({
-      "reservationEndTime": endTime,
-      "reservationFee": fee
-    });
-  }
-
-  Future<void> recharge(amount) async{
-    String userID = await getCurrentUser();
-    await Firestore.instance.collection("user").document(userID).updateData({
-      "userCredit": FieldValue.increment(int.parse(amount))
-    });
-  }
-
-  Future hasReservation() async{
-    var userID = await User().getCurrentUser();
-    var allReservation = await Firestore.instance.collection("reservation").getDocuments();
-    List<DocumentSnapshot> allReservations = allReservation.documents;
-    if (allReservations.length != 0){
-      //reservations exist
-      var userReservation = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
-      List<DocumentSnapshot> userReservations = userReservation.documents;
-      for (int i = 0; i<userReservations.length; i++){
-        if ((userReservations[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (userReservations[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
-          return "expired";
-        }
-        else if (userReservations[i].data["reservationStatus"] == 1){
-          return "confirmed";
-        }
-        else if (userReservations[i].data["reservationStatus"] == 2){
-          return "ongoing";
-        }
-        else if (userReservations[i].data["reservationStatus"] == 3){
-          if (userReservations[i].data["reservationSlotReallocation"] != ""){
-            return "reallocation";
-          }
-          else{
-            return "checkedin";
-          }
-        }
-        else if (userReservations[i].data["reservationStatus"] == 4){
-          return "checkingout";
-        }
+        await System().calculateFee(reservation["parkingLotID"], reservation["reservationStartTime"].toDate(), endTime, endTime, "normal");
       }
+      return extend;
     }
-    return null;
-  }
-
-  Future getExpiredReservation() async{
-    final String userID = await User().getCurrentUser();
-    var reservations = await Firestore.instance.collection("reservation").where("userID", isEqualTo: userID).where("reservationStatus", isLessThan: 5).getDocuments();
-    List<DocumentSnapshot> reservation = reservations.documents;
-    for (int i = 0; i < reservation.length; i++){
-      if ((reservation[i].data["reservationStartTime"].toDate()).isBefore(DateTime.now()) && (reservation[i].data["reservationEndTime"].toDate()).isBefore(DateTime.now())){
-        return reservation[i];
-      }
+    else{
+      await System().calculateFee(reservation["parkingLotID"], reservation["reservationStartTime"].toDate(), endTime, endTime, "normal");
+      await Firestore.instance.collection("reservation").document(reservationID).updateData({
+        "reservationEndTime": endTime,
+        "parkingSlotID": type
+      });
+      return "";
     }
   }
-
-  Future<void> setReservationExpired() async{
-    final reservation = await getExpiredReservation();
-    final String reservationID = reservation.documentID;
-    return await Firestore.instance.collection("reservation").document(reservationID).updateData({
-      "reservationStatus": 6
+  
+  Future<void> confirmReallocation(slot) async{
+    String reservationID = await User().getCurrentReservation();
+    DocumentSnapshot reservation = await User().getReservationDetails();
+    String parkingLotID = await ParkingLot().getParkingLot(slot);
+    await Firestore.instance.collection("reservation").document(reservationID).updateData({
+      "parkingLotID": parkingLotID,
+      "parkingSlotID": slot,
+      "reservationSlotReallocation": false,
+      "reservationDiscount": true,
+      "reservationCheckInTime": DateTime.now(),
+      "reservationStatus": 3
     });
+
+    await System().calculateFee(parkingLotID, reservation["reservationStartTime"].toDate(), reservation["reservationEndTime"].toDate(), reservation["reservationEndTime"].toDate(), "normal");
   }
+
 }

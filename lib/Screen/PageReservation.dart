@@ -2,6 +2,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smartpark/Model/System.dart';
@@ -27,6 +28,14 @@ class _PageReservationState extends State<PageReservation> {
   final Vehicle _vehicle = Vehicle();
   final System _system = System();
 
+  int _reservationStatus;
+  String _chosenVehicle;
+
+  DateFormat dateFormat = DateFormat("MMM d, yyyy");
+  DateFormat timeFormat = DateFormat("HH: mm");
+
+   RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   void _dialogError(error){
     Alert(
       context: context,
@@ -49,12 +58,6 @@ class _PageReservationState extends State<PageReservation> {
       ],
     ).show();
   }
-
-  int _reservationStatus;
-  String _chosenVehicle;
-
-  DateFormat dateFormat = DateFormat("MMM d, yyyy");
-  DateFormat timeFormat = DateFormat("HH: mm");
 
   void _dialogPaymentFailed(){
     Alert(
@@ -150,7 +153,7 @@ class _PageReservationState extends State<PageReservation> {
     );
   }
 
-  void _dialogMakePayment(fee){
+  void _dialogMakePayment(){
     bool _btnDisabled = false;
     showDialog(
       context: context,
@@ -218,13 +221,13 @@ class _PageReservationState extends State<PageReservation> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "AMOUNT",
+                              "Cancellation Fee",
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black54,
                               ),
                             ),
-                            Text("Rs " + fee.toString()),
+                            Text("Rs " + (snapshot.data["reservationPenaltyFee"]).toString()),
                           ],
                         ),
                       ],
@@ -251,10 +254,10 @@ class _PageReservationState extends State<PageReservation> {
                         setState(() {
                           _btnDisabled = !_btnDisabled;
                         });
-                        var result = await _user.makePayment(fee, "cancelled");
+                        var result = await _user.makePayment((snapshot.data["reservationPenaltyFee"]), "cancelled");
                         Navigator.of(context).pop();
                         if (result){
-                          _dialogPaymentSuccessful(fee);
+                          _dialogPaymentSuccessful((snapshot.data["reservationPenaltyFee"]));
                         }
                         else{
                           _dialogPaymentFailed();
@@ -275,17 +278,18 @@ class _PageReservationState extends State<PageReservation> {
   }
 
   Widget vehicles(){
+    final providerUser = Provider.of<User>(context);
     return Container(
       height: 200,
       width: 300,
-      child: FutureBuilder<dynamic>(
-        future: _vehicle.getVehiclePlateNumbers(),
+      child: StreamBuilder<dynamic>(
+        stream: _vehicle.getVehicles(providerUser.uid),
         builder: (context, snap){
-          if (snap.connectionState == ConnectionState.done){
+          if (snap.hasData){
             return Container(
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: snap.data.length,
+                itemCount: snap.data.documents.length,
                 itemBuilder: (context, index){
                   return GestureDetector(
                     onTap: () async{
@@ -306,7 +310,7 @@ class _PageReservationState extends State<PageReservation> {
                     child: Container(
                       width: 100,
                       margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                      decoration: _chosenVehicle == snap.data[index] ?  BoxDecoration(
+                      decoration: _chosenVehicle == snap.data.documents[index]["vehiclePlateNumber"] ?  BoxDecoration(
                         borderRadius: BorderRadius.circular(25.0),
                         border: Border.all(
                           color: hex("#84ceeb"),
@@ -320,11 +324,11 @@ class _PageReservationState extends State<PageReservation> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(
-                            Icons.directions_car,
+                            snap.data.documents[index]["type"] == "4-Wheeler" ? Icons.directions_car : Icons.motorcycle,
                             color: hex("#5680e9"),
                           ),
                           Text(
-                            snap.data[index]
+                            snap.data.documents[index]["vehiclePlateNumber"]
                           ),
                         ],
                       ),
@@ -397,9 +401,9 @@ class _PageReservationState extends State<PageReservation> {
             var listener = DataConnectionChecker().onStatusChange.listen((status) async{
               switch (status) {
                 case DataConnectionStatus.connected:
-                  var fee = await _system.calculateFee(parkingLotID, startTime, endTime, endTime, "cancelled");
+                  await _system.calculateFee(parkingLotID, startTime, endTime, endTime, "cancellation");
                   Navigator.of(context).pop();
-                  return _dialogMakePayment(fee);
+                  return _dialogMakePayment();
                   break;
                 case DataConnectionStatus.disconnected:
                   _dialogError("Please make sure you have an active internet connection");
@@ -491,9 +495,27 @@ class _PageReservationState extends State<PageReservation> {
                 SizedBox(height: 30,),
                 Card(
                   child: ListTile(
-                    leading: Icon(
-                      Icons.directions_car,
-                      color: hex("#5680e9"),
+                    leading: FutureBuilder<String>(
+                      future: Vehicle().getVehicleType(snapshot.data["vehicleID"]),
+                      builder: (BuildContext context, AsyncSnapshot snapshot){
+                        if (snapshot.connectionState == ConnectionState.done){
+                          if (snapshot.data == "2-Wheeler"){
+                            return Icon(
+                              Icons.motorcycle,
+                              color: hex("#5680e9"),
+                            );
+                          }
+                          else{
+                            return Icon(
+                              Icons.directions_car,
+                              color: hex("#5680e9"),
+                            );
+                          }
+                        }
+                        return Icon(
+                          Icons.autorenew
+                        );
+                      },
                     ),
                     title: Text(snapshot.data["vehicleID"]),
                     trailing: Icon(
@@ -518,7 +540,7 @@ class _PageReservationState extends State<PageReservation> {
                       color: hex("#34ceeb"),
                     ),
                     onTap: (){
-                      Navigator.push(context, RouteTransition(page: PageChangeReservation(date: date, startTime: startTime, endTime: endTime,)));
+                      Navigator.push(context, RouteTransition(page: PageChangeReservation(date: date, startTime: startTime, endTime: endTime, vehicle: snapshot.data["vehicleID"],)));
                     },
                   ),
                 ),
@@ -576,8 +598,6 @@ class _PageReservationState extends State<PageReservation> {
       ),
     );
   }
-
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
     Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()), (route) => false);

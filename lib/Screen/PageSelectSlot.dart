@@ -9,11 +9,12 @@ import 'package:smartpark/Widget/WidgetBottomNavigation.dart';
 
 class PageSelectSlot extends StatefulWidget {
   final String vehicle;
+  final String vehicleType;
   final DateTime date;
   final DateTime startTime;
   final DateTime endTime;
 
-  PageSelectSlot({Key key, @required this.vehicle, @required this.date, @required this.startTime, @required this.endTime}): super(key:key);
+  PageSelectSlot({Key key, @required this.vehicle, @required this.vehicleType, @required this.date, @required this.startTime, @required this.endTime}): super(key:key);
 
   @override
   _PageSelectSlotState createState() => _PageSelectSlotState();
@@ -134,75 +135,76 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
   }
 
   Widget parkingLot(){
+    print(widget.vehicleType);
     return StreamBuilder<dynamic>(
       stream: _system.getReservations(widget.date),
       builder: (BuildContext context, AsyncSnapshot streamSnapshot){
         if (streamSnapshot.hasData) {
           return FutureBuilder<dynamic>(
-            future: _system.findAllAvailableSlots(streamSnapshot.data.documents, widget.startTime, widget.endTime),
+            future: _system.findAllAvailableSlots(streamSnapshot.data.documents, widget.startTime, widget.endTime, widget.vehicleType),
             builder: (BuildContext context, AsyncSnapshot futureSnapshot){
               if (futureSnapshot.connectionState == ConnectionState.done){
                 return CustomScrollView(
-                slivers: <Widget>[
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 30.0,
-                      crossAxisSpacing: 50.0,
-                      childAspectRatio: 4.0,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        if (futureSnapshot.data[index+10]){
-                          return Container(
-                            padding: EdgeInsets.only(bottom: 22),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.black,
-                                  width: 3.0
-                                ),
-                              )
-                            ),
-                            child: FlatButton(
-                              child: Text(
-                                futureSnapshot.data[index],
-                                style: TextStyle(
-                                  color: Colors.green
-                                ),
+                  slivers: <Widget>[
+                    SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 30.0,
+                        crossAxisSpacing: 50.0,
+                        childAspectRatio: 4.0,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          if (futureSnapshot.data[index+10]){
+                            return Container(
+                              padding: EdgeInsets.only(bottom: 22),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.black,
+                                    width: 3.0
+                                  ),
+                                )
                               ),
-                              onPressed: (){
-                                return _dialogConfirmReservation(futureSnapshot.data[index], widget.vehicle, widget.date, widget.startTime, widget.endTime);
-                              },
-                            ),
-                          );
-                        }
-                        else{
-                          return Container(
-                            padding: EdgeInsets.only(bottom: 22),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.black,
-                                  width: 3.0
+                              child: FlatButton(
+                                child: Text(
+                                  futureSnapshot.data[index],
+                                  style: TextStyle(
+                                    color: Colors.green
+                                  ),
                                 ),
-                              )
-                            ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.directions_car,
-                                color: Colors.red,
-                              )
-                            ),
-                          );
-                        }
-                      },
-                      childCount: ((futureSnapshot.data.length/2).toInt()),
-                    ),
-                  )
-                ],
-              );
+                                onPressed: (){
+                                  return _dialogConfirmReservation(futureSnapshot.data[index], widget.vehicle, widget.date, widget.startTime, widget.endTime);
+                                },
+                              ),
+                            );
+                          }
+                          else{
+                            return Container(
+                              padding: EdgeInsets.only(bottom: 22),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.black,
+                                    width: 3.0
+                                  ),
+                                )
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.directions_car,
+                                  color: Colors.red,
+                                )
+                              ),
+                            );
+                          }
+                        },
+                        childCount: ((futureSnapshot.data.length/2).toInt()),
+                      ),
+                    )
+                  ],
+                );
               }
               else{
                 return Container();

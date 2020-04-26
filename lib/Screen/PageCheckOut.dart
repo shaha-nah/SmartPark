@@ -170,13 +170,26 @@ class _PageCheckOutState extends State<PageCheckOut> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "AMOUNT",
+                              "Fee",
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black54,
                               ),
                             ),
                             Text("Rs " + snapshot.data["reservationFee"].toString()),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Penalty",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            Text("+ Rs " + snapshot.data["reservationPenaltyFee"].toString()),
                           ],
                         ),
                       ],
@@ -204,9 +217,9 @@ class _PageCheckOutState extends State<PageCheckOut> {
                           _btnDisabled = !_btnDisabled;
                         });
                         Navigator.of(context).pop();
-                        bool result = await _user.makePayment(snapshot.data["reservationFee"].toInt(), "normal");
+                        bool result = await _user.makePayment(snapshot.data["reservationFee"].toInt() + snapshot.data["reservationPenaltyFee"].toInt(), "normal");
                         if (result){
-                          _dialogPaymentSuccessful(snapshot.data["reservationFee"]);
+                          _dialogPaymentSuccessful(snapshot.data["reservationFee"] + snapshot.data["reservationPenaltyFee"].toInt());
                         }
                         else{
                           _dialogPaymentFailed();

@@ -26,6 +26,7 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
   final System _system = System();
 
   String _chosenVehicle = "";
+  String _vehicleType = "";
 
   String _date = "Date";
   String _startTime = "Start Time";
@@ -130,7 +131,7 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
                   setState(() {
                     _btnDisabled = !_btnDisabled;
                   });
-                  String _parkingSlot = await _system.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime);
+                  String _parkingSlot = await _system.findParkingSlot(_dtDate, _dtStartTime, _dtEndTime, _vehicleType);
                   if (_parkingSlot == "none"){
                     _dialogError("It seems like the parking is full.", 2);
                   }
@@ -195,7 +196,6 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
       builder: (context, snap){
         if (snap.hasData){
           if (snap.data.documents.length == 0){
-            print("oo");
             return GestureDetector(
               onTap: (){
                 Navigator.push(context, RouteTransition(page: PageVehicleForm()));
@@ -222,14 +222,16 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
             scrollDirection: Axis.horizontal,
             itemCount: snap.data.documents.length,
             itemBuilder: (context, index){
-              if (index == 0){
-                _chosenVehicle = snap.data.documents[index]["vehiclePlateNumber"];
-              }
               if (index == snap.data.documents.length -1){
                 return Row(
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () => setState(() => _chosenVehicle=snap.data.documents[index]["vehiclePlateNumber"]),
+                      onTap: () => setState((){
+                        _chosenVehicle=snap.data.documents[index]["vehiclePlateNumber"];
+                        print(_chosenVehicle);
+                        _vehicleType = snap.data.documents[index]["type"];
+                        print(_vehicleType);
+                      }),
                       child: Container(
                         width: 100,
                         margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -247,7 +249,7 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.directions_car,
+                              snap.data.documents[index]["type"] == "4-Wheeler" ? Icons.directions_car : Icons.motorcycle,
                               color: hex("#5680e9"),
                             ),
                             Text(
@@ -263,7 +265,12 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
               }
               else{
                 return GestureDetector(
-                  onTap: () => setState(() => _chosenVehicle=snap.data.documents[index]["vehiclePlateNumber"]),
+                  onTap: () => setState((){
+                    _chosenVehicle=snap.data.documents[index]["vehiclePlateNumber"];
+                    print(_chosenVehicle);
+                    _vehicleType = snap.data.documents[index]["type"];
+                    print(_vehicleType);
+                  }),
                   child: Container(
                     width: 100,
                     margin: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -281,7 +288,7 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
-                          Icons.directions_car,
+                          snap.data.documents[index]["type"] == "4-Wheeler" ? Icons.directions_car : Icons.motorcycle,
                           color: hex("#5680e9"),
                         ),
                         Text(
@@ -579,7 +586,7 @@ class _PageFindParkingSpotState extends State<PageFindParkingSpot> {
           _dialogError("Please enter all the details", 1);
         }
         else{
-          Navigator.push(context, RouteTransition(page: PageSelectSlot(vehicle: _chosenVehicle, date: _dtDate, startTime: _dtStartTime, endTime: _dtEndTime)));
+          Navigator.push(context, RouteTransition(page: PageSelectSlot(vehicle: _chosenVehicle, date: _dtDate, startTime: _dtStartTime, endTime: _dtEndTime, vehicleType: _vehicleType)));
         }
       },
     );

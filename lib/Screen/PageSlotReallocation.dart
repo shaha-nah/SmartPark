@@ -50,7 +50,7 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
             ),
           ),
           onPressed: () async {
-            await _system.reallocate(slot);
+            await _user.confirmReallocation(slot);
             Navigator.pushAndRemoveUntil(context, RouteTransition(page: WidgetBottomNavigation()),(Route<dynamic> route) => false,);
           },
         ),
@@ -61,72 +61,83 @@ class _PageSlotReallocationState extends State<PageSlotReallocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<dynamic>(
-        future: _user.getReservationDetails(),
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-          if (snapshot.data != null){
-            return Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _image,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1),
-                    child: Text(
-                      "Oh no! Your slot is not available...",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Text(
-                    "We are deeply for the inconvenience!",
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      "You have been reallocated to:",
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Text(
-                      "Slot " + snapshot.data["reservationSlotReallocation"],
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 20,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Text(
-                      "and given a discount.",
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  _btnConfirm(snapshot.data["reservationSlotReallocation"])
-                ],
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _image,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1),
+              child: Text(
+                "Oh no! Your slot is not available...",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold
+                ),
+                textAlign: TextAlign.center,
               ),
-            );
-          }
-          else{
-            return Container();
-          }
-        }
+            ),
+            Text(
+              "We are deeply for the inconvenience!",
+              style: TextStyle(
+                fontSize: 17,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                "You have been reallocated to:",
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: FutureBuilder<String>(
+                future: System().slotReallocation("checkin", "none"),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if (snapshot.data != null){
+                    return Column(
+                      children: <Widget>[
+                        Text(
+                          "Slot " + snapshot.data,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 3),
+                          child: Text(
+                            "and given a discount.",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        _btnConfirm(snapshot.data)
+                      ],
+                    );
+                  }
+                  return Container();
+                },
+              )
+              // child: Text(
+              //   "Slot ",
+              //   style: TextStyle(
+              //     color: Colors.red,
+              //     fontSize: 20,
+              //   ),
+              //   textAlign: TextAlign.center,
+              // ),
+            ),
+          ],
+        ),
       ),
+          
     );
   }
 }
