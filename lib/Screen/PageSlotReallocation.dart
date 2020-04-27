@@ -12,7 +12,6 @@ class PageSlotReallocation extends StatefulWidget {
 
 class _PageSlotReallocationState extends State<PageSlotReallocation> {
   final User _user = User();
-  final System _system = System();
 
   final _image = Hero(
     tag: 'hero',

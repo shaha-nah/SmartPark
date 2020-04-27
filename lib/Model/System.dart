@@ -299,7 +299,7 @@ class System{
     return slot;
   }
 
-  Future canModifyReservation(endTime) async{
+  Future<String> canModifyReservation(endTime) async{
     DocumentSnapshot reservation = await User().getReservationDetails();
     if (endTime.isBefore(reservation["reservationEndTime"].toDate())){
       return "";
