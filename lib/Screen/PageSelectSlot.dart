@@ -144,6 +144,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
             future: _system.findAllAvailableSlots(streamSnapshot.data.documents, widget.startTime, widget.endTime, widget.vehicleType),
             builder: (BuildContext context, AsyncSnapshot futureSnapshot){
               if (futureSnapshot.connectionState == ConnectionState.done){
+                print(futureSnapshot.data.length);
                 return CustomScrollView(
                   slivers: <Widget>[
                     SliverGrid(
@@ -155,7 +156,7 @@ class _PageSelectSlotState extends State<PageSelectSlot>{
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          if (futureSnapshot.data[index+10]){
+                          if (futureSnapshot.data[index+(futureSnapshot.data.length / 2).toInt()]){
                             return Container(
                               padding: EdgeInsets.only(bottom: 22),
                               decoration: BoxDecoration(

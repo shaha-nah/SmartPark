@@ -38,8 +38,9 @@ class User {
       'userName': name,
       'userEmail': email,
       'userPhoneNumber': phoneNumber,
-      'userCredit': 0,
-      'userRole': "normal"
+      'userCredit': 1000,
+      'userRole': "normal",
+      'markAsDeleted': false
     });
   }
 
@@ -114,6 +115,18 @@ class User {
 
   Future<void> deleteAccount() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final String uid = await getCurrentUser();
+    await Firestore.instance.collection("user").document(uid).updateData({
+      'markAsDeleted': true
+    });
+    var vehicles = await Firestore.instance.collection("vehicle").where("userID", isEqualTo: uid).where("markAsDeleted", isEqualTo: false).getDocuments();
+    List<DocumentSnapshot> listVehicle = vehicles.documents;
+    listVehicle.forEach((vehicle) async{
+      var vehicleID= vehicle.documentID;
+      await Firestore.instance.collection("vehicle").document(vehicleID).updateData({
+        'markAsDeleted': true
+      });
+    });
     user.delete().then((_){
     }).catchError((error) {
     });

@@ -293,10 +293,12 @@ class _PageReservationState extends State<PageReservation> {
                 itemBuilder: (context, index){
                   return GestureDetector(
                     onTap: () async{
+                      print("boo");
                       var listener = DataConnectionChecker().onStatusChange.listen((status) async{
                         switch (status) {
                           case DataConnectionStatus.connected:
-                            await _user.changeVehicle(snap.data[index]);
+                            // print(snap.data[index]["vehiclePlateNumber"]);
+                            await _user.changeVehicle(snap.data.documents[index]["vehiclePlateNumber"]);
                             Navigator.of(context).pop();
                             break;
                           case DataConnectionStatus.disconnected:
