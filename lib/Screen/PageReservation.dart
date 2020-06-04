@@ -302,7 +302,7 @@ class _PageReservationState extends State<PageReservation> {
                             Navigator.of(context).pop();
                             break;
                           case DataConnectionStatus.disconnected:
-                            _dialogError("Please make sure you have an active internet connection");
+                            _dialogError("Please make sure you have an active internet connection!");
                             break;
                         }
                       });
