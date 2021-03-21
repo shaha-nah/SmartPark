@@ -5,7 +5,7 @@ Smart Park is a system that can be used as a tool to help drivers park their car
 This repository contains the code for the mobile application.
 
 ## Project Info
-This project is divided into three different repositories.
+This project is divided into four different repositories.
 
 > Mobile application 
 > 
@@ -15,9 +15,13 @@ This project is divided into three different repositories.
 > 
 > https://github.com/super-hxman/SmartParkAdmin
 
-> IoT System
+> IoT System - Client
 > 
 > https://github.com/super-hxman/SmartParkClient
+
+> IoT System - Server
+> 
+> https://github.com/super-hxman/SmartParkServer
 
 <br/>
 
